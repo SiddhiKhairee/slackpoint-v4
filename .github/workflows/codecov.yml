@@ -1,0 +1,33 @@
+name: Running Tests and Code Coverage
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        echo requirements installed
+    - name: Run the tests
+      run:
+        pytest
+    - name: Calculate code coverage
+      run:
+          coverage run --source=. -m pytest && coverage xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: a6f6a087-c599-421c-8e92-bc56f0bf7827
