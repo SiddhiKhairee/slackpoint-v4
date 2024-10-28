@@ -111,6 +111,60 @@ def interactive_endpoint():
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
+
+            elif actions[0]["action_id"] == "create_character_button":
+                # Create character - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                task_id = int(actions[0]["value"])
+                helper = ErrorHelper()
+                et = EditTask(task_id)
+                state_values = payload["state"]["values"]
+                desc = None
+                deadline = None
+                points = None
+                strength = None
+                magic = None
+                defense = None
+                resistance = None
+                agility = None
+                luck = None
+                
+                # 
+                for _, val in state_values.items():
+                    if "create_character_strength" in val:
+                        strength = val["create_character_strength"]
+                    if "create_character_magic" in val:
+                        magic = val["create_character_magic"]
+                    if "create_character_defense" in val:
+                        defense = val["create_character_defenser"]
+                    if "create_character_resistance" in val:
+                        resistance = val["create_character_resistance"]
+                    if "create_character_agility" in val:
+                        agility = val["create_character_agility"]
+                    if "create_character_luck" in val:
+                        luck = val["create_character_luck"]
+
+
+                    if "create_character_description" in val:
+                        desc = val["create_character_description"]["value"]
+                    elif "create_character_deadline" in val:
+                        deadline = val["create_character_deadline"]["selected_date"]
+                    elif "create_character_points" in val:
+                        if val["create_character_points"]["selected_option"] is not None:
+                            points = val["create_character_points"]["selected_option"]["value"]
+                        else:
+                            points = None
+                if desc is None or deadline is None or points is None:
+                    error_blocks = helper.get_error_payload_blocks("createcharacter")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline)
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
     return make_response("", 200)
 
 

@@ -45,5 +45,14 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slack_user_id = db.Column(db.String, unique=True)
+    max_hp = db.Column(db.Integer)
+    max_mp = db.Column(db.Integer)
+    strength = db.Column(db.Integer)
+    magic = db.Column(db.Integer)
+    defense = db.Column(db.Integer)
+    resistance = db.Column(db.Integer)
+    agility = db.Column(db.Integer)
+    luck = db.Column(db.Integer)
+    stat_points_to_allocate = db.Column(db.Integer)
 
     __table_args__ = (db.UniqueConstraint("user_id"),)
