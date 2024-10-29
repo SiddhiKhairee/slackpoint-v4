@@ -31,12 +31,58 @@ class BattleHelper:
         power = move_power + (2 * user_atk)
 
         # Calculate the amount of damage based on the target's defense
-        damage = power**2 / (power - (5 * target_def))
+
+        # If the denominator of the function is 0, then return 1 damage to avoid NaN
+        if (power + (5 * target_def) == 0):
+            return 1
+
+        # Calculate the amount of damage to be dealth using a multiplicative damage calculation model
+        damage = power**2 / (power + (5 * target_def))
+
+        # If the damage is less than or equal to 1, let the move do 1 damage
+        if (damage <= 1):
+            return 1
 
         # Generate random multiplier value (less variation the more Luck the user has)
         rng_roll = uniform(1.0 + (user_luk / 100), 1.1)
 
         return floor(rng_roll * damage)
+    
+    @staticmethod
+    def calculate_fixed_damage(user_atk: int, move_power: int, target_def: int) -> int:
+        """
+        Calculates the damage based on the inputted values for attack, move power, and defense. This function
+        is meant to be customizable in that the attack type and defense types can be varied to create a variety 
+        of different attack variations. This does not have any random factor in its calculation, unlike calculate_damage.
+
+        (e.g. Physical, Magical, Physical that hits Resistance, Magical that hits Defense)
+
+        :param user_atk: The value associated with the player's attack stat (STR, MAG, etc.)
+        :param move_power: The value representative of the power of the move being used
+        :param target_def: The defense value used to dampen the amount of damage being dealt
+        :type user_atk: int
+        :type move_power: int
+        :type target_def: int
+        :rtype: int
+        """
+
+        # The amount of total power the user's attack and move power creates
+        power = move_power + (2 * user_atk)
+
+        # Calculate the amount of damage based on the target's defense
+
+        # If the denominator of the function is 0, then return 1 damage to avoid NaN
+        if (power + (5 * target_def) == 0):
+            return 1
+
+        # Calculate the amount of damage to be dealth using a multiplicative damage calculation model
+        damage = power**2 / (power + (5 * target_def))
+
+        # If the damage is less than or equal to 1, let the move do 1 damage
+        if (damage <= 1):
+            return 1
+
+        return floor(damage)
 
     @staticmethod
     def calculate_hit_rate(user_agl: int, user_luk: int, move_hit: int, target_agl: int, target_luk: int) -> int:
