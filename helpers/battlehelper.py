@@ -1,5 +1,5 @@
 from random import uniform
-from math import floor, ceil
+from math import floor, ceil, abs
 
 
 class BattleHelper:
@@ -30,6 +30,10 @@ class BattleHelper:
         # The amount of total power the user's attack and move power creates
         power = move_power + (2 * user_atk)
 
+        # Set the amount of power to 0 if it happens to go into the negative
+        if (power < 0):
+            power = 0
+
         # Calculate the amount of damage based on the target's defense
 
         # If the denominator of the function is 0, then return 1 damage to avoid NaN
@@ -39,6 +43,10 @@ class BattleHelper:
         # Calculate the amount of damage to be dealth using a multiplicative damage calculation model
         damage = power**2 / (power + (5 * target_def))
 
+        # Take the absolute value of damage if the target's defense is lower than 0 so that damage is not negative
+        if (target_def < 0):
+            damage = abs(damage)
+
         # If the damage is less than or equal to 1, let the move do 1 damage
         if (damage <= 1):
             return 1
@@ -47,7 +55,7 @@ class BattleHelper:
         rng_roll = uniform(1.0 + (user_luk / 100), 1.1)
 
         return floor(rng_roll * damage)
-    
+
     @staticmethod
     def calculate_fixed_damage(user_atk: int, move_power: int, target_def: int) -> int:
         """
@@ -69,6 +77,10 @@ class BattleHelper:
         # The amount of total power the user's attack and move power creates
         power = move_power + (2 * user_atk)
 
+        # Set the amount of power to 0 if it happens to go into the negative
+        if (power < 0):
+            power = 0
+
         # Calculate the amount of damage based on the target's defense
 
         # If the denominator of the function is 0, then return 1 damage to avoid NaN
@@ -77,6 +89,10 @@ class BattleHelper:
 
         # Calculate the amount of damage to be dealth using a multiplicative damage calculation model
         damage = power**2 / (power + (5 * target_def))
+
+        # Take the absolute value of damage if the target's defense is lower than 0 so that damage is not negative
+        if (target_def < 0):
+            damage = abs(damage)
 
         # If the damage is less than or equal to 1, let the move do 1 damage
         if (damage <= 1):
