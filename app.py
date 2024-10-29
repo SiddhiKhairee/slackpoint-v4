@@ -1,6 +1,8 @@
 from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import json
 
 from commands.help import Help
@@ -22,7 +24,7 @@ from helpers import helper
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
 db.init_app(app)
-
+migrate = Migrate(app, db)
 
 # instantiating slack client
 slack_client = WebClient(Config.SLACK_BOT_TOKEN)
@@ -57,11 +59,14 @@ def interactive_endpoint():
                 desc = None
                 deadline = None
                 points = None
+                tags = None
                 for _, val in state_values.items():
                     if "create_action_description" in val:
                         desc = val["create_action_description"]["value"]
                     elif "create_action_deadline" in val:
                         deadline = val["create_action_deadline"]["selected_date"]
+                    elif "create_action_tags" in val:
+                        tags = val["create_action_tags"]["value"].split(",")
                     elif "create_action_points" in val:
                         if val["create_action_points"]["selected_option"] is not None:
                             points = val["create_action_points"]["selected_option"][
@@ -75,7 +80,7 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline)
+                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags = tags)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -91,14 +96,19 @@ def interactive_endpoint():
                 desc = None
                 deadline = None
                 points = None
+                tags = None
                 for _, val in state_values.items():
                     if "edit_action_description" in val:
                         desc = val["edit_action_description"]["value"]
                     elif "edit_action_deadline" in val:
                         deadline = val["edit_action_deadline"]["selected_date"]
+                    elif "create_action_tags" in val:
+                        tags = val["create_action_tags"]["value"].split(",")
                     elif "edit_action_points" in val:
                         if val["edit_action_points"]["selected_option"] is not None:
-                            points = val["edit_action_points"]["selected_option"]["value"]
+                            points = val["edit_action_points"]["selected_option"][
+                                "value"
+                            ]
                         else:
                             points = None
                 if desc is None or deadline is None or points is None:
@@ -107,7 +117,7 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline)
+                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags = tags)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -172,7 +182,6 @@ def vcompleted():
 
     vp = ViewPoints(progress=1.0)
     payload = vp.get_list()
-
 
     return jsonify(payload)
 
@@ -298,7 +307,7 @@ def edit():
 
     """
     data = request.form
-    task_id = int(data.get('text'))
+    task_id = int(data.get("text"))
     et = EditTask(task_id)
     allowed, error = et.is_editable()
     if not allowed:
