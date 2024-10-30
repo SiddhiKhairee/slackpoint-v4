@@ -45,6 +45,21 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slack_user_id = db.Column(db.String, unique=True)
+    player_id = db.Column(db.Integer)
+
+    __table_args__ = (db.UniqueConstraint("user_id"),)
+
+
+class Player(db.Model):
+    """
+    This class is a database model for the Player entity. It stores character stats used in
+    battle calculations and any progression points that the Player can use to strength themselves.
+    """
+
+    __tablename__ = "player"
+
+    player_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    character_class = db.Column(db.String)
     max_hp = db.Column(db.Integer)
     max_mp = db.Column(db.Integer)
     strength = db.Column(db.Integer)
@@ -55,4 +70,26 @@ class User(db.Model):
     luck = db.Column(db.Integer)
     stat_points_to_allocate = db.Column(db.Integer)
 
-    __table_args__ = (db.UniqueConstraint("user_id"),)
+    __table_args__ = (db.UniqueConstraint("player_id"),)
+
+
+class Battle(db.Model):
+    """
+    This class is a database model for the Battle entity. This stores information on current Player
+    status within a battle, mostly pertaining to their ID, HP, and MP. Currently there are two
+    Players in any given Battle.
+    """
+
+    __tablename__ = "battle"
+
+    battle_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # The first player in the battle
+    player_id_1 = db.Column(db.String, unique=True)
+    hp_remaining_1 = db.Column(db.Integer)
+    mp_remaining_1 = db.Column(db.Integer)
+    # The second player in the battle
+    player_id_2 = db.Column(db.String, unique=True)
+    hp_remaining_2 = db.Column(db.Integer)
+    mp_remaining_2 = db.Column(db.Integer)
+
+    __table_args__ = (db.UniqueConstraint("battle_id"),)

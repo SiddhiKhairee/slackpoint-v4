@@ -1,5 +1,5 @@
 from random import uniform
-from math import floor, ceil, abs
+from math import floor, ceil
 
 
 class BattleHelper:
