@@ -122,8 +122,8 @@ class CreateTask:
         blocks.append(block_description)
         blocks.append(block_deadline)
         blocks.append(block_points)
-        blocks.append(block_actions)
         blocks.append(block_tags)
+        blocks.append(block_actions)
         return blocks
 
     def create_task(self, desc, points, deadline, tags):
@@ -136,6 +136,8 @@ class CreateTask:
         :type points: int
         :param deadline: Deadline of task
         :type deadline: Date
+        :param tags: Associated string tags
+        :type tags: json
         :raise:
         :return: Blocks list of response payload
         :rtype: list

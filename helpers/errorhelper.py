@@ -45,7 +45,6 @@ class ErrorHelper:
         error["blocks"].extend(errorBlock_2)
         return error["blocks"]
 
-
     def get_command_help(self, command):
         """
         Get compiled error blocks for a particular command

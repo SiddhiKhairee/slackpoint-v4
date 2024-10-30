@@ -63,6 +63,7 @@ class EditTask:
             "element": {
                 "type": "plain_text_input",
                 "action_id": "create_action_tags",
+                "initial_value": task.tags
             },
             "label": {"type": "plain_text", "text": "Tag", "emoji": True},
         }
@@ -180,7 +181,6 @@ class EditTask:
         response["text"]["text"] = response["text"]["text"].format(greeting=random.choice(self.greetings), id=self.task_id)
         self.payload["blocks"].append(response)
         return self.payload["blocks"]
-
 
     def get_task(self):
         task = db.session.query(Task).filter_by(task_id=self.task_id).first()

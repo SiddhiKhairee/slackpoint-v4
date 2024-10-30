@@ -80,7 +80,7 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags = tags)
+                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags=tags)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -117,7 +117,7 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags = tags)
+                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags=tags)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
