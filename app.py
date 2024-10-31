@@ -117,13 +117,10 @@ def interactive_endpoint():
                 channel_id = payload["container"]["channel_id"]
                 user_id = payload["user"]["id"]
                 task_id = int(actions[0]["value"])
-                helper = ErrorHelper()
+                helper
                 et = EditTask(task_id)
                 state_values = payload["state"]["values"]
-                desc = None
-                deadline = None
-                points = None
-                
+
                 strength = None
                 magic = None
                 defense = None
@@ -149,7 +146,7 @@ def interactive_endpoint():
                 # Checks if all fields are populated and if the total does not exceed 20
                 if (all(stat is None for stat in [strength, magic, defense, resistance, agility, luck])
                         or strength + magic + defense + resistance + agility + luck != 20):
-                    # Get error payload if 
+                    # Get error payload if any fields are empty or the stat total is not 20
                     error_blocks = helper.get_error_payload_blocks("createcharacter")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
