@@ -65,7 +65,7 @@ class TaskDone:
         task_progress = Assignment.query.filter_by(assignment_id=current_task_id, progress=0.0).all()
 
         if exists is False:
-            return helper.get_command_help("no_task_id") 
+            return helper.get_command_help("no_task_id")
 
         # check if task is done
         elif exists is True and len(task_progress) == 0:
@@ -76,6 +76,8 @@ class TaskDone:
 
             my_query = self.get_or_create(current_slack_id)
             user_id = my_query.user_id
+
+            # TODO: Add a section here that increases the amount of points in Player if the User has a Player defined
 
             db.session.query(Assignment).filter_by(assignment_id=current_task_id).update(dict(progress=1.0, user_id=user_id))
             db.session.commit()
