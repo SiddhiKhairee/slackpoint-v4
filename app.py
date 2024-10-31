@@ -14,6 +14,7 @@ from configuration.env_config import Config
 from commands.createtask import CreateTask
 from commands.edittask import EditTask
 from commands.summary import Summary
+from commands.createcharacter import CreateCharacter
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
@@ -118,7 +119,7 @@ def interactive_endpoint():
                 user_id = payload["user"]["id"]
                 task_id = int(actions[0]["value"])
                 helper
-                et = EditTask(task_id)
+                cc = CreateCharacter()
                 state_values = payload["state"]["values"]
 
                 strength = None
@@ -384,6 +385,21 @@ def create_character():
     Endpoint that creates a character given several values representative of character stats. This
     should only be usable if the user does not already have a character
     """
+    # Get payload blocks for character creation
+    data = request.form
+    user_id = int(data.get("user_id"))
+    cc = CreateCharacter(user_id)
+    blocks = cc.create_character_input_blocks()
+
+    # Check if player already exists, if it does
+    allowed, error = cc.can_create_character()
+
+    if not allowed:
+        return jsonify(error)
+
+    channel_id = data.get("channel_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
 
 
 @app.route("/allocate-points", methods=["POST"])

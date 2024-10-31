@@ -181,10 +181,10 @@ Consider this homework to be one of our many steps at achieving our dreams! :win
 
 ### Chat Channel
 
-<code><a href="https://app.slack.com/client/T03VB79B2GG/C03U705CJ15" target="_blank"><img height="30" width="100" src="https://user-images.githubusercontent.com/111834635/194175304-834d5663-b6bb-4e38-981d-98bc1bf028b8.png"></a></code>
+<code><a href="https://app.slack.com/client/T07PB5UGB7Y/C07PB5VLS30" target="_blank"><img height="30" width="100" src="https://user-images.githubusercontent.com/111834635/194175304-834d5663-b6bb-4e38-981d-98bc1bf028b8.png"></a></code>
 
 
 ### Our team
-- Nihar Rao, Manish Shinde, Palash Jhamb, Saksham Pandey, Shruti Verma
+- Brian Huynh, Manav Kamdar, Shanmukh Chatadi
 ### Reach out to us!
 

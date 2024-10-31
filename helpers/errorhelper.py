@@ -69,4 +69,6 @@ class ErrorHelper:
             command_help = "Congratulations your task is completed now!"
         elif command == "task_edited":
             command_help = "The given Task ID has been successfully edited!"
+        elif command == "player_exists":
+            command_help = "A player already exists for this user, they cannot create another."
         return command_help

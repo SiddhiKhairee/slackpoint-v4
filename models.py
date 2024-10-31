@@ -45,7 +45,7 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slack_user_id = db.Column(db.String, unique=True)
-    player_id = db.Column(db.Integer)
+    player_id = db.Column(db.Integer, ForeignKey("player.player_id"))
 
     __table_args__ = (db.UniqueConstraint("user_id"),)
 
