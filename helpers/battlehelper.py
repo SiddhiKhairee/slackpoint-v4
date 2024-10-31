@@ -52,7 +52,7 @@ class BattleHelper:
             return 1
 
         # Generate random multiplier value (less variation the more Luck the user has)
-        rng_roll = uniform(1.0 + (user_luk / 100), 1.1)
+        rng_roll = uniform(1.0 + (user_luk / 1000), 1.1)
 
         return floor(rng_roll * damage)
 

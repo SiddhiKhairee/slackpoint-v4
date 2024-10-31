@@ -10,6 +10,19 @@ def test_calculate_damage():
     Tests whether the damage calculations are completely functional and return expected values
     """
 
+    # Check to see if BattleHelper calculates values that fall within the range of the random generation 50 times
+    for i in range(0, 50):
+        damage = BattleHelper.calculate_damage(46, 0, 80, 22)
+        assert damage >= 104 and damage <= 115, "Test higher move power than atk"
+    
+    for i in range(0, 50):
+        damage = BattleHelper.calculate_damage(73, 0, 20, 60)
+        assert damage >= 59 and damage <= 65, "Test higher atk than move power"
+    
+    for i in range(0, 50):
+        damage = BattleHelper.calculate_damage(99, 50, 200, 43)
+        assert damage >= 271 and damage <= 284, "50 luck test reduces RNG variance by 0.05"
+
 
 def test_calculate_damage_high_defense():
     """
@@ -79,12 +92,30 @@ def test_calculate_fixed_damage():
     Tests whether the damage calculations are completely functional and return expected values
     """
 
+    # Check to see if BattleHelper calculates values that DO NOT have variance
+    for i in range(0, 50):
+        damage = BattleHelper.calculate_fixed_damage(46, 80, 22)
+        assert damage == 104, "Test higher move power than atk"
+    
+    for i in range(0, 50):
+        damage = BattleHelper.calculate_fixed_damage(73, 20, 60)
+        assert damage == 59, "Test higher atk than move power"
+    
+    for i in range(0, 50):
+        damage = BattleHelper.calculate_fixed_damage(99, 200, 43)
+        assert damage == 258, "Test very high attack power"
+
 
 def test_calculate_fixed_damage_high_defense():
     """
     Tests checks relating to damage calculations that end up being less than 1.
     They should all return 1 damage as the lowest possible value.
     """
+
+    # Test using different amounts of base powers against a very large defense value that should do 1 damage
+    assert BattleHelper.calculate_fixed_damage(5, 0, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert BattleHelper.calculate_fixed_damage(0, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert BattleHelper.calculate_fixed_damage(5, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
 
 
 def test_calculate_fixed_damage_zero_boundary():
@@ -93,12 +124,32 @@ def test_calculate_fixed_damage_zero_boundary():
     This should return as 1 damage.
     """
 
+    assert BattleHelper.calculate_fixed_damage(0, 0, 0) == 1, "Damage calculator did not calculate zero boundary correctly if it divides by 0"
+
+    # Test instances where power would not be zero, should return higher than 1
+    assert BattleHelper.calculate_fixed_damage(5, 0, 0) >= 1, "Damage calculator should not be 1 or less if power is more than 1"
+    assert BattleHelper.calculate_fixed_damage(0, 5, 0) >= 1, "Damage calculator should not be 1 or less if power is more than 1"
+
 
 def test_calculate_fixed_damage_negative():
     """
     Tests negative values being used in the damage calculations. This may be useful to test if debuffs are
     added as a mechanic, which could induce negative values depending on the implementation.
     """
+
+    # Test with negative offensive values
+    assert BattleHelper.calculate_fixed_damage(-5, 0, 0) == 1, "Damage calculator should be 1 if damage is negative"
+    assert BattleHelper.calculate_fixed_damage(0, -5, 0) == 1, "Damage calculator should be 1 if damage is negative"
+    assert BattleHelper.calculate_fixed_damage(-5, -5, 0) == 1, "Damage calculator should be 1 if damage is negative"
+
+    # Test with negative defensive values and positive attack values
+    damage = BattleHelper.calculate_fixed_damage(5, 5, -5)
+    assert damage == 23, "Damage should be 23 with 10 atk and -5 def, no variance observed"
+    
+    # Test with negative defense and attack values
+    damage = BattleHelper.calculate_fixed_damage(-5, -5, -5)
+    assert damage == 1, "Damage should be 1 since power is set to 0 when negative"
+
 
 #############################
 # Test calculate_hit_rate() #
