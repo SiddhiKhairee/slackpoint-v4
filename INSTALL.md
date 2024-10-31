@@ -23,7 +23,7 @@ but feel free to use something else if you would like to):
   python3.x -m venv test_env
 ```
 
-Activate the virtual environment:
+### Activate the virtual environment:
 
 **Linux/MacOS:**
 ```bash
@@ -35,19 +35,19 @@ Activate the virtual environment:
   ./test_env/Scripts/activate
 ```
 
-Clone the project from GitHub:
+**Clone the project from GitHub:**
 
 ```bash
   git clone https://github.com/brianhhuynh38/slackpoint-v3
 ```
 
-Go to the project directory:
+**Go to the project directory:**
 
 ```bash
   cd Slackpoint
 ```
 
-Install dependencies:
+**Install dependencies:**
 
 ```bash 
   pip install -r requirements.txt
@@ -63,16 +63,16 @@ packages you might need to install.
 The process of creating your Slack Bot should not be too difficult, but we will walk you through the process as it may be difficult to 
 figure out where exactly each component is.
 
-### 1. Register/Log In to [[api.slack.com]]
+### 1. Register/Log In to the [Slack API Website](https://api.slack.com/)
 
-[[api.slack.com]] is the website that allows you to manage the settings for your Slack Bot. Create an account or log into your Slack account
+The [Slack API website](https://api.slack.com/) allows you to manage the settings for your Slack Bot. Create an account or log into your Slack account
 in order to be able to create Slack apps that we will be deploying later in this guide.
 
 ### 2. Create a Slack Workspace
 
 You must also have a designated Slack workspace in order to invite teammates and SlackPoint into so that you are able to test the program.
 If you already have a workspace you would like to use: fantastic! You can move onto the next step if so. Otherwise, create a Slack workspace
-by logging in at [[slack.com]] and selecting `Create a New Workspace`. From there, simply follow the instructions provided to create and name
+by logging in at [Slack](https://slack.com/) and selecting `Create a New Workspace`. From there, simply follow the instructions provided to create and name
 the workspace.
 
 ![image](https://github.com/user-attachments/assets/362d62ba-d208-443a-8994-497d78663528)
@@ -159,9 +159,9 @@ and shortcuts section every time you would like to run this.
 ## Setting Up the `.env` File
 
 Before running your application and creating the database for the server, the Slack bot's verification tokens and secrets must be defined.
-This information can be found in the basic information section of the Slack Bot API dashboard, pictured here:
+This information can be found in the Basic Information section of the Slack Bot API dashboard, pictured here:
 
-![image](https://github.com/user-attachments/assets/aecc8e7c-8893-4766-82f7-d7b1bd947a1a)
+![image](https://github.com/user-attachments/assets/945722a4-b6e7-45cc-a3c3-ed8c37f9a6f1)
 
 In the source code, create a `.env` file in the root folder of the project. This defines the token variables required for authorization to the 
 Slack API. Here is an example of the file below:
@@ -183,7 +183,7 @@ that allow pgAdmin to run as well.
 
 (1) Create a database in pgAdmin with any name convention.
   
-(2) Change the local path of PostgreSQL in .env file (DATABASE_URL= 'postgresql://postgres:(password)@localhost/(database name from PgAdmin') 
+(2) Change the local path of PostgreSQL in the `.env` file (DATABASE_URL= 'postgresql://postgres:(password)@localhost/(database name from PgAdmin') 
 
 To create tables in the database,
 ```bash
@@ -201,6 +201,6 @@ Now you have all the materials you need in order to run the server:
       http://127.0.0.1:5000/
 ```
 
-From here, your Slack bot should be functional as long as you have followed all of these steps. I would try to `/help` command to see if the 
+From here, your Slack bot should be functional as long as you have followed all of these steps. I would try to use the `/help` command to see if the 
 bot is working properly.
        
