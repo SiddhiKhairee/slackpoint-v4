@@ -91,6 +91,14 @@ def test_help():
                     "text": ">To view the summary, just try the command */summary*, and there you go! SlackPoint would show you a list of pending tasks, completed tasks and the current leaderboard.",
                 },
             },
+            {"type": "section", "text": {"type": "mrkdwn", "text": "*Character Creation*"}},
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">To create a character, use the */create-character* command. Customize the stats as you please, but you can only allocate 20 points total. So, keep that in mind as you customize your character.",
+                },
+            }
         ],
     }
     assert payload == expected_payload

@@ -168,15 +168,11 @@ class CreateCharacter:
         db.session.commit()
         db.session.refresh(player)
 
-        
-
         # Get the ID of the player
         p_id = player.player_id
 
         # Query the User that the player should be assigned to and update the information
-        db.session.query(User).filter_by(user_id=self.user_id).update(
-            dict(player_id=p_id)
-        )
+        db.session.query(User).filter_by(user_id=self.user_id)
         db.session.commit()
 
         response = deepcopy(self.base_create_character_block_format)
