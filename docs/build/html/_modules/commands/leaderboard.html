@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>commands.leaderboard &mdash; slackpoint 2.0.0 documentation</title>
+  <title>commands.leaderboard &mdash; slackpoint-v2 2.2.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> slackpoint
+            <a href="../../index.html" class="icon icon-home"> slackpoint-v2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -47,7 +47,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">slackpoint</a>
+          <a href="../../index.html">slackpoint-v2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -73,35 +73,30 @@
 
 
 <div class="viewcode-block" id="Leaderboard"><a class="viewcode-back" href="../../commands.html#commands.leaderboard.Leaderboard">[docs]</a><span class="k">class</span> <span class="nc">Leaderboard</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class handles the Create Leaderboard functionality.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">base_leaderboard_block_format</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{pos}</span><span class="s2">. &lt;@</span><span class="si">{userid}</span><span class="s2">&gt; has </span><span class="si">{points}</span><span class="s2"> points!&quot;</span>
-        <span class="p">}</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{pos}</span><span class="s2">. &lt;@</span><span class="si">{userid}</span><span class="s2">&gt; has </span><span class="si">{points}</span><span class="s2"> points!&quot;</span><span class="p">},</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor to initialize payload object</span>
 
-<span class="sd">        :param: </span>
-<span class="sd">        :type: </span>
+<span class="sd">        :param:</span>
+<span class="sd">        :type:</span>
 <span class="sd">        :raise:</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        :rtype: None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;response_type&quot;</span><span class="p">:</span> <span class="s2">&quot;ephemeral&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>
-        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;response_type&quot;</span><span class="p">:</span> <span class="s2">&quot;ephemeral&quot;</span><span class="p">,</span> <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
 
 <div class="viewcode-block" id="Leaderboard.view_leaderboard"><a class="viewcode-back" href="../../commands.html#commands.leaderboard.Leaderboard.view_leaderboard">[docs]</a>    <span class="k">def</span> <span class="nf">view_leaderboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates leaderboard according to the highest points scorers, returns top five contenders from DB</span>
 
 <span class="sd">        :param top_k: Provision to generate top k contenders in leaderboard, default value: 5</span>
@@ -111,28 +106,38 @@
 <span class="sd">        :rtype: dict[str, Any]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">top_5_leaderboard</span> <span class="o">=</span> <span class="n">Assignment</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span> \
-            <span class="n">with_entities</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">slack_user_id</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;total_points&quot;</span><span class="p">))</span><span class="o">.</span> \
-            <span class="nb">filter</span><span class="p">(</span><span class="n">Assignment</span><span class="o">.</span><span class="n">progress</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span> \
-            <span class="n">group_by</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span> \
-            <span class="n">order_by</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s2">&quot;total_points&quot;</span><span class="p">))[:</span><span class="n">top_k</span><span class="p">]</span>
+        <span class="n">top_5_leaderboard</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Assignment</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Task</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">with_entities</span><span class="p">(</span>
+                <span class="n">User</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+                <span class="n">User</span><span class="o">.</span><span class="n">slack_user_id</span><span class="p">,</span>
+                <span class="n">func</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Task</span><span class="o">.</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;total_points&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Assignment</span><span class="o">.</span><span class="n">progress</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="s2">&quot;total_points&quot;</span><span class="p">))[:</span><span class="n">top_k</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="c1"># parse them</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">top_5_leaderboard</span><span class="p">:</span>
             <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">point</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_leaderboard_block_format</span><span class="p">)</span>
-            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">userid</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">slack_user_id</span><span class="p">,</span>
-                                                                 <span class="n">points</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">total_points</span><span class="p">)</span>
+            <span class="n">point</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">point</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">pos</span><span class="o">=</span><span class="n">count</span><span class="p">,</span> <span class="n">userid</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">slack_user_id</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">total_points</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;Looks like the competition hasn&#39;t started yet :(&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;&gt;Looks like the competition hasn&#39;t started yet :(&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
                 <span class="p">}</span>
-            <span class="p">})</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span></div></div>
 </pre></div>
 
@@ -143,7 +148,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Mithil Dani, Neha Kale, Vansh Mehta, Rishikesh Yelne, Ritwik Vaidya.</p>
+    <p>&#169; Copyright 2022, Saksham Pandey, Nihar Rao, Shruti Verma, Palash Jhamb, Manish Shinde.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
