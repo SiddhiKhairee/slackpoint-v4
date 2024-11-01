@@ -16,6 +16,7 @@ from configuration.env_config import Config
 from commands.createtask import CreateTask
 from commands.edittask import EditTask
 from commands.summary import Summary
+from commands.filtertasks import FilterTasks
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
@@ -185,6 +186,28 @@ def vcompleted():
 
     return jsonify(payload)
 
+@app.route("/filtertasks",methods = ["POST"])
+def filtertasks():
+    """
+    Endpoint to view the completed tasks
+
+    :param:
+    :type:
+    :raise:
+    :return: Response object with filtered tasks
+    :rtype: Response
+
+    """
+
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    filters = data.get("text")
+
+    ft = FilterTasks()
+    payload = ft.filter_tasks(filters=filters)
+
+    return jsonify(payload)
 
 @app.route("/taskdone", methods=["POST"])
 def taskdone():
