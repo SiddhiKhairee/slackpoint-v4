@@ -16,23 +16,23 @@ on the implementation:
 
 ## Creating a Virtual Environment
 
-Create a virtual environment to install all the packages in (this example's installation uses test_env as an example name,
+Create a virtual environment to install all the packages in (this example's installation uses `.venv` as an example name,
 but feel free to use something else if you would like to):
 
 ```bash
-  python3.x -m venv test_env
+  python3.x -m venv .venv
 ```
 
 ### Activate the virtual environment:
 
 **Linux/MacOS:**
 ```bash
-  source test_env/bin/activate
+  source .venv/bin/activate
 ```
 
 **Windows:**
 ```bash
-  ./test_env/Scripts/activate
+  .venv/Scripts/activate
 ```
 
 **Clone the project from GitHub:**
