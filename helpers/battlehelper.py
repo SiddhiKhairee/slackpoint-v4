@@ -11,7 +11,7 @@ class BattleHelper:
     def calculate_damage(user_atk: int, user_luk: int, move_power: int, target_def: int) -> int:
         """
         Calculates the damage based on the inputted values for attack, move power, and defense. This function
-        is meant to be customizable in that the attack type and defense types can be varied to create a variety 
+        is meant to be customizable in that the attack type and defense types can be varied to create a variety
         of different attack variations.
 
         (e.g. Physical, Magical, Physical that hits Resistance, Magical that hits Defense)
@@ -52,7 +52,7 @@ class BattleHelper:
             return 1
 
         # Generate random multiplier value (less variation the more Luck the user has)
-        rng_roll = uniform(1.0 + (user_luk / 1000), 1.1)
+        rng_roll = uniform(1.0 + ((user_luk if user_luk <= 99 else 99) / 1000), 1.1)
 
         return floor(rng_roll * damage)
 
@@ -60,7 +60,7 @@ class BattleHelper:
     def calculate_fixed_damage(user_atk: int, move_power: int, target_def: int) -> int:
         """
         Calculates the damage based on the inputted values for attack, move power, and defense. This function
-        is meant to be customizable in that the attack type and defense types can be varied to create a variety 
+        is meant to be customizable in that the attack type and defense types can be varied to create a variety
         of different attack variations. This does not have any random factor in its calculation, unlike calculate_damage.
 
         (e.g. Physical, Magical, Physical that hits Resistance, Magical that hits Defense)
@@ -103,7 +103,7 @@ class BattleHelper:
     @staticmethod
     def calculate_hit_rate(user_agl: int, user_luk: int, move_hit: int, target_agl: int, target_luk: int) -> int:
         """
-        Calculate the hit rates and dodging capabilities of each of the parties involved. The agility and luck values 
+        Calculate the hit rates and dodging capabilities of each of the parties involved. The agility and luck values
         are used for the calculation of the hit rate multiplier, which is made to modify the hit rate of the move.
 
         :param user_agl: The user's agility stat, used in hit calculations
@@ -119,10 +119,14 @@ class BattleHelper:
         :rtype: int
         """
 
+        # If the base hit rate is 101, this signifies that this is a move that never misses
+        if move_hit >= 101:
+            return 100
+
         # Defines hit rate and dodge values for each of two involved parties and uses them to calculate the hit rate multiplier
-        user_hit_val = user_agl + (user_luk * 0.3) + 128.7
-        target_hit_val = target_agl + (target_luk * 0.3) + 128.7
-        hit_rate_multplier = user_hit_val / target_hit_val
+        user_hit_val = (user_agl if user_agl >= -99 else -99) + ((user_luk if user_luk >= -99 else -99) * 0.3) + 128.7
+        target_hit_val = (target_agl if target_agl >= -99 else -99) + ((target_luk if target_luk >= -99 else -99) * 0.3) + 128.7
+        hit_rate_multplier = (user_hit_val / target_hit_val) if target_hit_val != 0 else user_hit_val
 
         # Calculate hit rate
         hit_rate = hit_rate_multplier * move_hit
