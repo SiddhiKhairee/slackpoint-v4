@@ -96,7 +96,15 @@ def test_help():
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": ">To create a character, use the */create-character* command. Customize the stats as you please, but you can only allocate 20 points total. So, keep that in mind as you customize your character.",
+                    "text": ">To create a character, use the */create-character* command. Customize the stats as you please, but you can only allocate 20 points total."
+                            ">So, keep that in mind as you customize your character.\n\n"
+                            ">*Character Class:* This determines the types of moves your character can use in battle, each class having its own set.\n\n"
+                            ">*Strength (STR)*: The amount of strength a character has represents the amount of physical strength it has\n"
+                            ">*Magic (MAG)*: The amount of magic prowess a character has to use magic attacks\n"
+                            ">*Defense (DEF)*: A value used to reduce the amount of damage done by physical attacks\n"
+                            ">*Resistance (RES)*: A value used to reduce the amount of damage done by magical attacks\n"
+                            ">*Agility (AGL)*: A value used to determine the hit rate and dodge rate of the character. Whoever has more agility will get the first turn in battle.\n"
+                            ">*Luck (LUK)*: A value used to slightly influence the chance to hit and dodge. It also factors into any RNG-based decisions that may occur during battle\n",
                 },
             }
         ],

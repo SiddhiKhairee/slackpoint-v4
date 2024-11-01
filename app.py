@@ -117,11 +117,11 @@ def interactive_endpoint():
                 # Create character - button was clicked
                 channel_id = payload["container"]["channel_id"]
                 user_id = payload["user"]["id"]
-                task_id = int(actions[0]["value"])
-                helper
-                cc = CreateCharacter()
+                helper = ErrorHelper()
+                cc = CreateCharacter(user_id)
                 state_values = payload["state"]["values"]
 
+                character_class = None
                 strength = None
                 magic = None
                 defense = None
@@ -131,34 +131,42 @@ def interactive_endpoint():
 
                 # Looks through all character stats
                 for _, val in state_values.items():
+                    if "create_character_class" in val:
+                        character_class = val["create_character_class"]["selected_option"]["value"]
                     if "create_character_strength" in val:
-                        strength = val["create_character_strength"]
+                        strength = int(val["create_character_strength"]["value"])
                     if "create_character_magic" in val:
-                        magic = val["create_character_magic"]
+                        magic = int(val["create_character_magic"]["value"])
                     if "create_character_defense" in val:
-                        defense = val["create_character_defenser"]
+                        defense = int(val["create_character_defense"]["value"])
                     if "create_character_resistance" in val:
-                        resistance = val["create_character_resistance"]
+                        resistance = int(val["create_character_resistance"]["value"])
                     if "create_character_agility" in val:
-                        agility = val["create_character_agility"]
+                        agility = int(val["create_character_agility"]["value"])
                     if "create_character_luck" in val:
-                        luck = val["create_character_luck"]
+                        luck = int(val["create_character_luck"]["value"])
 
                 # Checks if all fields are populated and if the total does not exceed 20
-                if (all(stat is None for stat in [strength, magic, defense, resistance, agility, luck])
-                        or strength + magic + defense + resistance + agility + luck != 20):
+                if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
+                        or strength + magic + defense + resistance + agility + luck > 20):
                     # Get error payload if any fields are empty or the stat total is not 20
                     error_blocks = helper.get_error_payload_blocks("createcharacter")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    print("hi")
-                    # TODO: Implement the Create Character command and add the blocks here
-                    #     blocks = et.edit_task(desc=desc, points=points, deadline=deadline)
-                    #     slack_client.chat_postEphemeral(
-                    #         channel=channel_id, user=user_id, blocks=blocks
-                    #     )
+                    blocks = cc.create_character(
+                        character_class=character_class,
+                        strength=strength,
+                        magic=magic,
+                        defense=defense,
+                        resistance=resistance,
+                        agility=agility,
+                        luck=luck
+                    )
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
 
     return make_response("", 200)
 
@@ -221,7 +229,6 @@ def vcompleted():
 
     vp = ViewPoints(progress=1.0)
     payload = vp.get_list()
-
 
     return jsonify(payload)
 
@@ -387,7 +394,7 @@ def create_character():
     """
     # Get payload blocks for character creation
     data = request.form
-    user_id = int(data.get("user_id"))
+    user_id = data.get("user_id")
     cc = CreateCharacter(user_id)
     blocks = cc.create_character_input_blocks()
 
