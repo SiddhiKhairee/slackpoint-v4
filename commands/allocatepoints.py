@@ -13,13 +13,13 @@ class AllocatePoints:
         "text": {
             "type": "mrkdwn",
             "text": ">You have come to understand a new power...\n\n"
-                    # ">Character Class: {prevClass} -> {newClass}\n"
-                    # ">*STR*: {prevSTR} -> {newSTR} ({diffSTR})\n"
-                    # ">*MAG*: {prevMAG} -> {newMAG} ({diffMAG})\n"
-                    # ">*DEF*: {prevDEF} -> {newDEF} ({diffDEF})\n"
-                    # ">*RES*: {prevRES} -> {newRES} ({diffRES})\n"
-                    # ">*AGL*: {prevAGL} -> {newAGL} ({diffAGL})\n"
-                    # ">*LUK*: {prevLUK} -> {newLUK} ({diffLUK})\n",
+                    ">*Character Class*: {prevClass} -> {newClass}\n\n"
+                    ">*STR*: {prevSTR} -> {newSTR} ({diffSTR})\n"
+                    ">*MAG*: {prevMAG} -> {newMAG} ({diffMAG})\n"
+                    ">*DEF*: {prevDEF} -> {newDEF} ({diffDEF})\n"
+                    ">*RES*: {prevRES} -> {newRES} ({diffRES})\n"
+                    ">*AGL*: {prevAGL} -> {newAGL} ({diffAGL})\n"
+                    ">*LUK*: {prevLUK} -> {newLUK} ({diffLUK})\n",
         },
     }
 
@@ -55,7 +55,7 @@ class AllocatePoints:
 
         """
 
-        self.current_player = db.session.query(Player).filter_by(player_id=self.p_id).one()
+        current_player = db.session.query(Player).filter_by(player_id=self.p_id).one()
 
         block_class_descriptor = {
             "type": "rich_text",
@@ -105,7 +105,7 @@ class AllocatePoints:
                             "type": "text",
                             "text": "Set your stats down below. You can allocate your new points to your stats or rearrange"
                                     "your stats and class as long as the total is equal to your total stats.\n\n"
-                                    "You have {} points to allocate.".format(getattr(self.current_player, "stat_points_to_allocate"))
+                                    "You have {} points to allocate.".format(getattr(current_player, "stat_points_to_allocate"))
                         }
                     ]
                 }
@@ -115,7 +115,7 @@ class AllocatePoints:
             "type": "input",
             "element": {
                 "type": "number_input",
-                "initial_value": str(getattr(self.current_player, "strength")),
+                "initial_value": str(getattr(current_player, "strength")),
                 "min_value": "0",
                 "max_value": "99",
                 "is_decimal_allowed": False,
@@ -132,7 +132,7 @@ class AllocatePoints:
             "type": "input",
             "element": {
                 "type": "number_input",
-                "initial_value": str(getattr(self.current_player, "magic")),
+                "initial_value": str(getattr(current_player, "magic")),
                 "min_value": "0",
                 "max_value": "99",
                 "is_decimal_allowed": False,
@@ -149,7 +149,7 @@ class AllocatePoints:
             "type": "input",
             "element": {
                 "type": "number_input",
-                "initial_value": str(getattr(self.current_player, "defense")),
+                "initial_value": str(getattr(current_player, "defense")),
                 "min_value": "0",
                 "max_value": "99",
                 "is_decimal_allowed": False,
@@ -166,7 +166,7 @@ class AllocatePoints:
             "type": "input",
             "element": {
                 "type": "number_input",
-                "initial_value": str(getattr(self.current_player, "resistance")),
+                "initial_value": str(getattr(current_player, "resistance")),
                 "min_value": "0",
                 "max_value": "99",
                 "is_decimal_allowed": False,
@@ -183,7 +183,7 @@ class AllocatePoints:
             "type": "input",
             "element": {
                 "type": "number_input",
-                "initial_value": str(getattr(self.current_player, "agility")),
+                "initial_value": str(getattr(current_player, "agility")),
                 "min_value": "0",
                 "max_value": "99",
                 "is_decimal_allowed": False,
@@ -200,7 +200,7 @@ class AllocatePoints:
             "type": "input",
             "element": {
                 "type": "number_input",
-                "initial_value": str(getattr(self.current_player, "luck")),
+                "initial_value": str(getattr(current_player, "luck")),
                 "min_value": "0",
                 "max_value": "99",
                 "is_decimal_allowed": False,
@@ -275,13 +275,13 @@ class AllocatePoints:
 
         # Get player and get all statistical attributes
         current_player = db.session.query(Player).filter_by(player_id=p_id).one()
-        p_str = getattr(current_player, "strength")
-        p_mag = getattr(current_player, "magic")
-        p_def = getattr(current_player, "defense")
-        p_res = getattr(current_player, "resistance")
-        p_agl = getattr(current_player, "agility")
-        p_luk = getattr(current_player, "luck")
-        p_pta = getattr(current_player, "stat_points_to_allocate")
+        p_str = int(getattr(current_player, "strength"))
+        p_mag = int(getattr(current_player, "magic"))
+        p_def = int(getattr(current_player, "defense"))
+        p_res = int(getattr(current_player, "resistance"))
+        p_agl = int(getattr(current_player, "agility"))
+        p_luk = int(getattr(current_player, "luck"))
+        p_pta = int(getattr(current_player, "stat_points_to_allocate"))
 
         # Return the sum of all the stats and the points still left to allocate
         return p_str + p_mag + p_def + p_res + p_agl + p_luk + p_pta
@@ -304,17 +304,24 @@ class AllocatePoints:
 
         """
 
-        print("added\n\n\n\n\n\n\n")
-        # Stats before being updated
-        p_class = getattr(self.current_player, "character_class")
-        p_str = int(getattr(self.current_player, "strength"))
-        p_mag = int(getattr(self.current_player, "magic"))
-        p_def = int(getattr(self.current_player, "defense"))
-        p_res = int(getattr(self.current_player, "resistance"))
-        p_agl = int(getattr(self.current_player, "agility"))
-        p_luk = int(getattr(self.current_player, "luck"))
+        # Find if player_id exists in User
+        current_slack_user_id = self.slack_user_id
+        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        p_id = getattr(current_user, "player_id")
 
-        total_stat_pool = p_str + p_mag + p_def + p_res + p_agl + p_luk + getattr(self.current_player, "stat_points_to_allocate")
+        # Get player and get all statistical attributes
+        current_player = db.session.query(Player).filter_by(player_id=p_id).one()
+
+        # Stats before being updated
+        p_class = getattr(current_player, "character_class")
+        p_str = int(getattr(current_player, "strength"))
+        p_mag = int(getattr(current_player, "magic"))
+        p_def = int(getattr(current_player, "defense"))
+        p_res = int(getattr(current_player, "resistance"))
+        p_agl = int(getattr(current_player, "agility"))
+        p_luk = int(getattr(current_player, "luck"))
+
+        total_stat_pool = p_str + p_mag + p_def + p_res + p_agl + p_luk + getattr(current_player, "stat_points_to_allocate")
 
         # Query the User that the player should be assigned to and update the information
         db.session.query(Player).filter_by().update(
@@ -334,14 +341,14 @@ class AllocatePoints:
         db.session.commit()
 
         response = deepcopy(self.base_allocate_points_block_format)
-        # response["text"]["text"] = response["text"]["text"].format(
-        #     prevClass=p_class, newClass=character_class,
-        #     prevSTR=p_str, newSTR=strength, diffSTR=strength - p_str,
-        #     prevMAG=p_mag, newMAG=magic, diffMAG=magic - p_mag,
-        #     prevDEF=p_def, newDEF=defense, diffDEF=defense - p_def,
-        #     prevRES=p_res, newRES=resistance, diffRES=resistance - p_res,
-        #     prevAGL=p_agl, newAGL=agility, diffAGL=agility - p_agl,
-        #     prevLUK=p_luk, newLUK=luck, diffLUK=luck - p_luk,
-        # )
+        response["text"]["text"] = response["text"]["text"].format(
+            prevClass=p_class, newClass=character_class,
+            prevSTR=p_str, newSTR=strength, diffSTR=strength - p_str,
+            prevMAG=p_mag, newMAG=magic, diffMAG=magic - p_mag,
+            prevDEF=p_def, newDEF=defense, diffDEF=defense - p_def,
+            prevRES=p_res, newRES=resistance, diffRES=resistance - p_res,
+            prevAGL=p_agl, newAGL=agility, diffAGL=agility - p_agl,
+            prevLUK=p_luk, newLUK=luck, diffLUK=luck - p_luk,
+        )
         self.payload["blocks"].append(response)
         return self.payload["blocks"]
