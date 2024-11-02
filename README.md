@@ -27,6 +27,7 @@ We're continuing their work to make sure you don't slack off :wink:
 
 https://user-images.githubusercontent.com/21088141/205798073-2269309d-5a60-43f9-a20a-74532c862d66.mp4
 
+## Demo
 
 ## Built with
   <img src = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" width="40" height="40"/> Flask
@@ -52,7 +53,6 @@ With the addition of v3, SlackPoint can also:
 
 * Create a player character
 * Allocate task points to strengthen your character
-* Battle other players
 
 Let's go over these one by one...
 
@@ -143,11 +143,35 @@ Command: ``/help [no parameters]``
 ![Help GIF](https://user-images.githubusercontent.com/21088141/205815812-8144bef2-73df-438c-a84a-6e322a09625a.gif)
 
 
-This will provide you will all the available commands and how to use them. Same sh*t this section is doing.
+This will provide you will all the available commands and how to use them.
+
+### Gamification Features
+
+Looking to have some fun with your tasks? Need to take a break? Feel free to have some fun with the gamified features added into SlackPoint as of v.3!
+Use your Task Points towards improving your player character and watch as you slowly get stronger from completing work tasks.
+
+#### **9. Character Creation:**
+
+Create your starting character class with any stats that you may want. This is fully customizable to give the players as much freedom as they can have
+in creating their character and getting stronger. They can also choose their moveset through the character class that they choose, each class having
+its own style of attack.
+
+![Screenshot 2024-11-01 203209](https://github.com/user-attachments/assets/ece835ad-5a80-4252-a929-5f0f387cbeb1)
+
+#### **10. Allocate and Reallocate Your Points:**
+
+Want to change classes or readjust your strategy for tackling some sort of challenge? Feel free to reallocate your stats at any point!
+You can even get extra points to allocate if you complete more tasks!
+
+![Screenshot 2024-11-01 224827](https://github.com/user-attachments/assets/7fc0dced-e9a7-40a5-8536-7bd111d31a6b)
+
 
 ## Project documentation
-The `docs` folder incorporates all necessary documents and documentation in our project.
- 
+
+The `docs` folder incorporates all necessary documents and documentation in our project regarding its overall design. The sphinx documentation can be built by referencing our directions on the GitHub wiki regarding the compilation of the documentation: [Documentation Compilation Guide](https://github.com/brianhhuynh38/slackpoint-v3/wiki/Documentation-Compilation-Guide)
+
+We have also defined much of our theoretical game design and database models in our GitHub Wiki pages as well under the [Game Design]() section.
+
 ### Project Dependencies
 
 * flask
