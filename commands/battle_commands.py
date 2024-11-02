@@ -1,11 +1,12 @@
 from flask import jsonify
 from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 from models import db, User, Player, Battle
 from helpers.player_helper import get_player_by_slack_id
 from helpers.battle_interactions import create_battle, get_battle_by_player
 import re
-from battle_helper import BattleHelper
-from character_class_manager import CharacterClassManager
+from helpers.battlehelper import BattleHelper
+from game.character_class_manager import CharacterClassManager
 import os
 
 slack_client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
@@ -17,6 +18,7 @@ def parse_opponent_id(text):
     if match:
         return match.group(1)
     return None
+
 
 def handle_battle_command(user_id, text):
     # Parse the opponent's Slack ID from the text
@@ -46,7 +48,6 @@ def handle_battle_command(user_id, text):
 
     # Notify both players
     return jsonify(response_type='in_channel', text=f'<@{user_id}> has challenged <@{opponent_slack_id}> to a battle!')
-
 
 
 def handle_attack_command(user_id, channel_id):

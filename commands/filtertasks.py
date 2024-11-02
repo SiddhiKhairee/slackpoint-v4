@@ -1,14 +1,15 @@
 from models import Task
 from helpers.errorhelper import ErrorHelper
 
+
 class FilterTasks:
-    def __init__(self,tags = None):
-        self.tags = tags 
+    def __init__(self, tags=None):
+        self.tags = tags
         self.payload = {
-        "response_type":"ephemeral",
-        "blocks" : []
+            "response_type": "ephemeral",
+            "blocks": []
         }
-    
+
     def filter_tasks(self):
         filtered_tasks = self.get_filtered_tasks()
         if not filtered_tasks:
@@ -33,6 +34,6 @@ class FilterTasks:
                 }
             self.payload["blocks"].append(task_block)
         return self.payload
-    
+
     def get_filtered_tasks(self):
         return Task.query.filter(Task.tags.contains(self.tags)).all()

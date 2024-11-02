@@ -1,5 +1,5 @@
 import json
-from move import Move
+from game.move import Move
 
 
 class CharacterClassManager:

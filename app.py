@@ -304,7 +304,8 @@ def vcompleted():
 
     return jsonify(payload)
 
-@app.route("/filtertasks",methods = ["POST"])
+
+@app.route("/filtertasks", methods=["POST"])
 def filtertasks():
     """
     Endpoint to view the completed tasks
@@ -326,6 +327,7 @@ def filtertasks():
     payload = ft.filter_tasks(filters=filters)
 
     return jsonify(payload)
+
 
 @app.route("/taskdone", methods=["POST"])
 def taskdone():
@@ -542,6 +544,7 @@ def take_battle_action():
     an error message
     """
 
+
 @app.route('/slack/commands', methods=['POST'])
 def handle_commands():
     command = request.form.get('command')
@@ -552,7 +555,6 @@ def handle_commands():
         return handle_battle_command(user_id, text)
     if command == '/attack':
         return handle_attack_command(user_id)
-
 
 
 if __name__ == "__main__":

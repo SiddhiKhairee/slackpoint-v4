@@ -83,7 +83,10 @@ class Battle(db.Model):
 
     __tablename__ = "battle"
 
-  # First player in the battle
+    # The ID number for the battle
+    battle_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # First player in the battle
     player_id_1 = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
     hp_remaining_1 = db.Column(db.Integer)
     mp_remaining_1 = db.Column(db.Integer)
