@@ -33,8 +33,8 @@ class Help:
             ">To view completed tasks, just try the command */view-completed*, and there you go! SlackPoint would show you a list of completed tasks.",
         ]
         self.commands_dictionary["viewpending"] = [
-            "*View Pending Task*",
-            ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks.",
+            "*View Pending Tasks*",
+            ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of pending tasks.",
         ]
         self.commands_dictionary["leaderboard"] = [
             "*Leaderboard*",
@@ -58,7 +58,7 @@ class Help:
         ]
         self.commands_dictionary["createcharacter"] = [
             "*Character Creation*",
-            ">To create a character, use the */create-character* command. Customize the stats as you please, but you can only allocate 20 points total."
+            ">To create a character, use the */create-character* command. Customize the stats as you please, but you can only allocate 20 points total.\n"
             ">So, keep that in mind as you customize your character.\n\n"
             ">*Character Class:* This determines the types of moves your character can use in battle, each class having its own set.\n\n"
             ">*Strength (STR)*: The amount of strength a character has represents the amount of physical strength it has\n"
@@ -70,7 +70,7 @@ class Help:
         ]
         self.commands_dictionary["allocatepoints"] = [
             "*Allocate Points*",
-            ">To reallocate stats, use the */allocate-points* command. Customize the stats as you please, but you can only allocate as much as you currently have + any points you have in reserve."
+            ">To reallocate stats, use the */allocate-points* command. Customize the stats as you please, but you can only allocate as much as you currently have + any points you have in reserve.\n"
             ">So, keep that in mind as you customize your character.\n",
         ]
         self.commands_dictionary["filtertasks"] = [
