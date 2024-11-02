@@ -5,9 +5,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
-[![GitHub contributors](https://img.shields.io/github/contributors/brianhhuynh38/slackpoint-v3)](https://github.com/nihar4276/slackpoint-v2/graphs/contributors/)
+[![GitHub contributors](https://img.shields.io/github/contributors/brianhhuynh38/slackpoint-v3)](https://github.com/brianhhuynh38/slackpoint-v3/graphs/contributors/)
 
-[![build](https://github.com/smanishs175/WalletBuddy/actions/workflows/build.yml/badge.svg)](https://github.com/brianhhuynh38/slackpoint-v3/actions)
+[![build](https://github.com/brianhhuynh38/slackpoint-v3/actions/workflows/codecov.yml/badge.svg)](https://github.com/brianhhuynh38/slackpoint-v3/actions)
 [![GitHub top language](https://img.shields.io/github/languages/top/brianhhuynh38/slackpoint-v3)](https://docs.python.org/3/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/brianhhuynh38/slackpoint-v3)](https://github.com/brianhhuynh38/slackpoint-v3/commits/main)
 [![codecov](https://codecov.io/gh/brianhhuynh38/slackpoint-v3/branch/main/graph/badge.svg?token=1H92SAVB5S)](https://codecov.io/gh/brianhhuynh38/slackpoint-v3)
