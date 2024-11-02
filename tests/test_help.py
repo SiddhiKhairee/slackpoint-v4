@@ -91,6 +91,14 @@ def test_help():
                     "text": ">To view the summary, just try the command */summary*, and there you go! SlackPoint would show you a list of pending tasks, completed tasks and the current leaderboard.",
                 },
             },
+            {"type": "section", "text": {"type": "mrkdwn", "text": "*Filter Tasks*"}},
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": ">To filter a task, just try the command */filtertasks*, and you can filter them based on the tags.",
+                },
+            },
         ],
     }
     assert payload == expected_payload
