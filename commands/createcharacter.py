@@ -36,7 +36,8 @@ class CreateCharacter:
 
     def create_character_input_blocks(self):
         """
-        Create blocks list containing input fields for description, deadline, points of a task, along with a button to create the task
+        Create blocks list containing input fields for class selection, all of the player stats, and
+        a button to create the player character.
 
         :param:
         :type:
@@ -268,8 +269,6 @@ class CreateCharacter:
 
         # Get the ID of the player
         p_id = player.player_id
-
-        print(p_id)
 
         # Query the User that the player should be assigned to and update the information
         db.session.query(User).filter_by(slack_user_id=self.slack_user_id).update(

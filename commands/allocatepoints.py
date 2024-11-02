@@ -3,20 +3,27 @@ from helpers.errorhelper import ErrorHelper
 from copy import deepcopy
 
 
-class CreateCharacter:
+class AllocatePoints:
     """
-    This class handles all functionality related to the creation of player characters.
+    This class handles all functionality related to the point reallocation of player characters.
     """
 
     base_allocate_points_block_format = {
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": ">Your character (ID: {id}, Class: {char_class}) allocated its points successfully.",
+            "text": ">You have come to understand a new power...\n\n"
+                    # ">Character Class: {prevClass} -> {newClass}\n"
+                    # ">*STR*: {prevSTR} -> {newSTR} ({diffSTR})\n"
+                    # ">*MAG*: {prevMAG} -> {newMAG} ({diffMAG})\n"
+                    # ">*DEF*: {prevDEF} -> {newDEF} ({diffDEF})\n"
+                    # ">*RES*: {prevRES} -> {newRES} ({diffRES})\n"
+                    # ">*AGL*: {prevAGL} -> {newAGL} ({diffAGL})\n"
+                    # ">*LUK*: {prevLUK} -> {newLUK} ({diffLUK})\n",
         },
     }
 
-    def __init__(self, user_id):
+    def __init__(self, slack_user_id: str):
         """
         Constructor to initialize payload object
 
@@ -28,15 +35,17 @@ class CreateCharacter:
 
         """
 
-        self.user_id = user_id
+        self.slack_user_id = slack_user_id
+
         self.payload = {
             "response_type": "ephemeral",
             "blocks": []
         }
 
-    def allocate_input_blocks(self):
+    def allocate_points_input_blocks(self):
         """
-        Create blocks list containing input fields for description, deadline, points of a task, along with a button to create the task
+        Create blocks list containing input fields for class selection, all of the player stats, and
+        a button to update the player character.
 
         :param:
         :type:
@@ -46,51 +55,161 @@ class CreateCharacter:
 
         """
 
+        self.current_player = db.session.query(Player).filter_by(player_id=self.p_id).one()
+
+        block_class_descriptor = {
+            "type": "rich_text",
+            "elements": [
+                {
+                    "type": "rich_text_quote",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "Change your class below if you'd like to. This will change your move set in battle."
+                        }
+                    ]
+                }
+            ]
+        }
+        block_class_selection = {
+            "type": "input",
+            "element": {
+                "type": "static_select",
+                "placeholder": {"type": "plain_text", "text": "Select a class", "emoji": True},
+                "options": [
+                    {
+                        "text": {"type": "plain_text", "text": "Swordmaster", "emoji": False},
+                        "value": "Swordmaster",
+                    },
+                    {
+                        "text": {"type": "plain_text", "text": "Fire Mage", "emoji": False},
+                        "value": "Fire Mage",
+                    }
+                ],
+                "action_id": "allocate_points_class",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "Select a character class for yourself! This determines what moves you will be able to use in battle.",
+                "emoji": True
+            },
+            "label": {"type": "plain_text", "text": "Character Class", "emoji": True},
+        }
+        block_stat_descriptor = {
+            "type": "rich_text",
+            "elements": [
+                {
+                    "type": "rich_text_quote",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "Set your stats down below. You can allocate your new points to your stats or rearrange"
+                                    "your stats and class as long as the total is equal to your total stats.\n\n"
+                                    "You have {} points to allocate.".format(getattr(self.current_player, "stat_points_to_allocate"))
+                        }
+                    ]
+                }
+            ]
+        }
         block_strength = {
             "type": "input",
             "element": {
-                "type": "plain_text_input",
-                "action_id": "create_character_strength",
+                "type": "number_input",
+                "initial_value": str(getattr(self.current_player, "strength")),
+                "min_value": "0",
+                "max_value": "99",
+                "is_decimal_allowed": False,
+                "action_id": "allocate_points_strength",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "The amount of strength a character has represents the amount of physical strength it has",
+                "emoji": True
             },
             "label": {"type": "plain_text", "text": "Strength", "emoji": True},
         }
         block_magic = {
             "type": "input",
             "element": {
-                "type": "plain_text_input",
-                "action_id": "create_character_magic",
+                "type": "number_input",
+                "initial_value": str(getattr(self.current_player, "magic")),
+                "min_value": "0",
+                "max_value": "99",
+                "is_decimal_allowed": False,
+                "action_id": "allocate_points_magic",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "The amount of magic prowess a character has to use magic attacks",
+                "emoji": True
             },
             "label": {"type": "plain_text", "text": "Magic", "emoji": True},
         }
         block_defense = {
             "type": "input",
             "element": {
-                "type": "plain_text_input",
-                "action_id": "create_character_defense",
+                "type": "number_input",
+                "initial_value": str(getattr(self.current_player, "defense")),
+                "min_value": "0",
+                "max_value": "99",
+                "is_decimal_allowed": False,
+                "action_id": "allocate_points_defense",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "A value used to reduce the amount of damage done by physical attacks",
+                "emoji": True
             },
             "label": {"type": "plain_text", "text": "Defense", "emoji": True},
         }
         block_resistance = {
             "type": "input",
             "element": {
-                "type": "plain_text_input",
-                "action_id": "create_character_resistance",
+                "type": "number_input",
+                "initial_value": str(getattr(self.current_player, "resistance")),
+                "min_value": "0",
+                "max_value": "99",
+                "is_decimal_allowed": False,
+                "action_id": "allocate_points_resistance",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "A value used to reduce the amount of damage done by magical attacks",
+                "emoji": True
             },
             "label": {"type": "plain_text", "text": "Resistance", "emoji": True},
         }
         block_agility = {
             "type": "input",
             "element": {
-                "type": "plain_text_input",
-                "action_id": "create_character_agility",
+                "type": "number_input",
+                "initial_value": str(getattr(self.current_player, "agility")),
+                "min_value": "0",
+                "max_value": "99",
+                "is_decimal_allowed": False,
+                "action_id": "allocate_points_agility",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "A value used to determine the hit rate and dodge rate of the character. Whoever has more agility will get the first turn in battle.",
+                "emoji": True
             },
             "label": {"type": "plain_text", "text": "Agility", "emoji": True},
         }
         block_luck = {
             "type": "input",
             "element": {
-                "type": "plain_text_input",
-                "action_id": "create_character_luck",
+                "type": "number_input",
+                "initial_value": str(getattr(self.current_player, "luck")),
+                "min_value": "0",
+                "max_value": "99",
+                "is_decimal_allowed": False,
+                "action_id": "allocate_points_luck",
+            },
+            "hint": {
+                "type": "plain_text",
+                "text": "A value used to slightly influence the chance to hit and dodge. It also factors into any RNG-based decisions that may occur during battle",
+                "emoji": True
             },
             "label": {"type": "plain_text", "text": "Luck", "emoji": True},
         }
@@ -98,14 +217,17 @@ class CreateCharacter:
             "type": "button",
             "text": {
                 "type": "plain_text",
-                "text": "Create Player"
+                "text": "Update Player"
             },
-            "action_id": "create_character_button",
+            "action_id": "allocate_points_button",
         }
         block_actions = {"type": "actions", "elements": []}
         block_actions["elements"].append(block_actions_button)
 
         blocks = []
+        blocks.append(block_class_descriptor)
+        blocks.append(block_class_selection)
+        blocks.append(block_stat_descriptor)
         blocks.append(block_strength)
         blocks.append(block_magic)
         blocks.append(block_defense)
@@ -117,30 +239,57 @@ class CreateCharacter:
 
     def can_allocate_points(self) -> tuple[bool, str]:
         """
-        Determines if the user already has a character created. If so, then return false and an
-        error message. If not, return true and a null error message, signifying success.
+        Determines if the user already has a character created. If so, then return true. If not,
+        return false and an error message.
 
-        :return: A tuple containing whether the character can be created and an error message if necessary
+        :return: A tuple containing whether the character can be updated and an error message if necessary
         :rtype: tuple[bool, str]
         """
 
-        current_user_id = self.user_id
+        current_slack_user_id = self.slack_user_id
         helper = ErrorHelper()
 
         # Find if player_id exists in User
-        player_existent = db.session.query(db.exists().where(User.user_id == current_user_id and User.player_id is not None)).scalar()
+        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        self.p_id = getattr(current_user, "player_id")
+        player_existent = self.p_id is not None
 
-        # TODO: Check if the player actually has points to allocate
-
-        if not player_existent:
+        if player_existent:
             return True, None
         else:
-            return False, helper.get_command_help("player_exists")
+            return False, helper.get_command_help("player_does_not_exist")
 
-    def allocate_points(self, strength: int, magic: int, defense: int, resistance: int,
-                         agility: int, luck: int) -> list:
+    def get_stat_total(self) -> int:
         """
-        Creates a character in the database and returns a payload with the success message along with the newly created player ID
+        Finds the player from the database, and returns the current stat total and points that they are able to
+        allocate.
+
+        :return: The sum of all player stats and the points left for allocation
+        :rtype: int
+        """
+
+        # Find if player_id exists in User
+        current_slack_user_id = self.slack_user_id
+        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        p_id = getattr(current_user, "player_id")
+
+        # Get player and get all statistical attributes
+        current_player = db.session.query(Player).filter_by(player_id=p_id).one()
+        p_str = getattr(current_player, "strength")
+        p_mag = getattr(current_player, "magic")
+        p_def = getattr(current_player, "defense")
+        p_res = getattr(current_player, "resistance")
+        p_agl = getattr(current_player, "agility")
+        p_luk = getattr(current_player, "luck")
+        p_pta = getattr(current_player, "stat_points_to_allocate")
+
+        # Return the sum of all the stats and the points still left to allocate
+        return p_str + p_mag + p_def + p_res + p_agl + p_luk + p_pta
+
+    def allocate_points(self, character_class: str, strength: int, magic: int, defense: int, resistance: int,
+                        agility: int, luck: int) -> list:
+        """
+        Gets the character from the database and updates all stats and class fields. Returns a payload containinf success information.
 
         :param character_class: The character class for the player that defines the moves they can use
         :param strength: The strength value of the player for physical attacks
@@ -155,27 +304,44 @@ class CreateCharacter:
 
         """
 
-        # Database call to add a character and get a generated ID
-        player = Player()
-        player.strength = strength
-        player.magic = magic
-        player.defense = defense
-        player.resistance = resistance
-        player.agility = agility
-        player.luck = luck
-        player.stat_points_to_allocate = 0
-        db.session.add(player)
-        db.session.commit()
-        db.session.refresh(player)
+        print("added\n\n\n\n\n\n\n")
+        # Stats before being updated
+        p_class = getattr(self.current_player, "character_class")
+        p_str = int(getattr(self.current_player, "strength"))
+        p_mag = int(getattr(self.current_player, "magic"))
+        p_def = int(getattr(self.current_player, "defense"))
+        p_res = int(getattr(self.current_player, "resistance"))
+        p_agl = int(getattr(self.current_player, "agility"))
+        p_luk = int(getattr(self.current_player, "luck"))
 
-        # Get the ID of the player
-        p_id = player.player_id
+        total_stat_pool = p_str + p_mag + p_def + p_res + p_agl + p_luk + getattr(self.current_player, "stat_points_to_allocate")
 
         # Query the User that the player should be assigned to and update the information
-        db.session.query(User).filter_by(user_id=self.user_id)
+        db.session.query(Player).filter_by().update(
+            dict(
+                max_hp=300 + (20 * defense),
+                max_mp=100 + (10 * magic),
+                character_class=character_class,
+                strength=strength,
+                magic=magic,
+                defense=defense,
+                resistance=resistance,
+                agility=agility,
+                luck=luck,
+                stat_points_to_allocate=total_stat_pool - strength - magic - defense - resistance - agility - luck
+            )
+        )
         db.session.commit()
 
-        response = deepcopy(self.base_create_character_block_format)
-        response["text"]["text"] = response["text"]["text"].format(char_class=character_class, id=id)
+        response = deepcopy(self.base_allocate_points_block_format)
+        # response["text"]["text"] = response["text"]["text"].format(
+        #     prevClass=p_class, newClass=character_class,
+        #     prevSTR=p_str, newSTR=strength, diffSTR=strength - p_str,
+        #     prevMAG=p_mag, newMAG=magic, diffMAG=magic - p_mag,
+        #     prevDEF=p_def, newDEF=defense, diffDEF=defense - p_def,
+        #     prevRES=p_res, newRES=resistance, diffRES=resistance - p_res,
+        #     prevAGL=p_agl, newAGL=agility, diffAGL=agility - p_agl,
+        #     prevLUK=p_luk, newLUK=luck, diffLUK=luck - p_luk,
+        # )
         self.payload["blocks"].append(response)
         return self.payload["blocks"]

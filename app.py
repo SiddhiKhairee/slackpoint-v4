@@ -15,6 +15,7 @@ from commands.createtask import CreateTask
 from commands.edittask import EditTask
 from commands.summary import Summary
 from commands.createcharacter import CreateCharacter
+from commands.allocatepoints import AllocatePoints
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
@@ -149,13 +150,69 @@ def interactive_endpoint():
                 # Checks if all fields are populated and if the total does not exceed 20
                 if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
                         or strength + magic + defense + resistance + agility + luck > 20):
-                    # Get error payload if any fields are empty or the stat total is not 20
+                    # Get error payload if any fields are empty or the stat total is over 20
                     error_blocks = helper.get_error_payload_blocks("createcharacter")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
                     blocks = cc.create_character(
+                        character_class=character_class,
+                        strength=strength,
+                        magic=magic,
+                        defense=defense,
+                        resistance=resistance,
+                        agility=agility,
+                        luck=luck
+                    )
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
+
+            elif actions[0]["action_id"] == "allocate_points_button":
+                # Create character - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                ap = AllocatePoints(user_id)
+                stat_total_boundary = ap.get_stat_total()
+                state_values = payload["state"]["values"]
+
+                character_class = None
+                strength = None
+                magic = None
+                defense = None
+                resistance = None
+                agility = None
+                luck = None
+
+                # Looks through all character stats
+                for _, val in state_values.items():
+                    if "allocate_points_class" in val:
+                        character_class = val["allocate_points_class"]["selected_option"]["value"]
+                    if "allocate_points_strength" in val:
+                        strength = int(val["allocate_points_strength"]["value"])
+                    if "allocate_points_magic" in val:
+                        magic = int(val["allocate_points_magic"]["value"])
+                    if "allocate_points_defense" in val:
+                        defense = int(val["allocate_points_defense"]["value"])
+                    if "allocate_points_resistance" in val:
+                        resistance = int(val["allocate_points_resistance"]["value"])
+                    if "allocate_points_agility" in val:
+                        agility = int(val["allocate_points_agility"]["value"])
+                    if "allocate_points_luck" in val:
+                        luck = int(val["allocate_points_luck"]["value"])
+
+                # Checks if all fields are populated and if the total does not exceed the stat total boundary
+                if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
+                        or strength + magic + defense + resistance + agility + luck > stat_total_boundary):
+                    # Get error payload if any fields are empty or exceeds the stat boundary
+                    error_blocks = helper.get_error_payload_blocks("allocatepoints")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = ap.allocate_points(
                         character_class=character_class,
                         strength=strength,
                         magic=magic,
@@ -415,6 +472,23 @@ def allocate_points():
     Endpoint that allows the user to allocate any points that they have accrued from completing tasks
     to their current stats.
     """
+    # Get user information
+    data = request.form
+    user_id = data.get("user_id")
+    ap = AllocatePoints(user_id)
+
+    # Check if player already exists, if it does
+    allowed, error = ap.can_allocate_points()
+
+    if not allowed:
+        return jsonify(error)
+
+    # Get payload blocks
+    blocks = ap.allocate_points_input_blocks()
+
+    channel_id = data.get("channel_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
 
 
 @app.route("/initiate-battle", methods=["POST"])

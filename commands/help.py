@@ -68,6 +68,11 @@ class Help:
             ">*Agility (AGL)*: A value used to determine the hit rate and dodge rate of the character. Whoever has more agility will get the first turn in battle.\n"
             ">*Luck (LUK)*: A value used to slightly influence the chance to hit and dodge. It also factors into any RNG-based decisions that may occur during battle\n",
         ]
+        self.commands_dictionary["allocatepoints"] = [
+            "*Allocate Points*",
+            ">To reallocate stats, use the */allocate-points* command. Customize the stats as you please, but you can only allocate as much as you currently have + any points you have in reserve."
+            ">So, keep that in mind as you customize your character.\n",
+        ]
         self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def help_all(self):
