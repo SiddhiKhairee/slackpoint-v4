@@ -11,6 +11,8 @@ from models import db
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
 
+from commands.battle_commands import handle_attack_command
+from commands.battle_commands import handle_battle_command
 from commands.viewpoints import ViewPoints
 from configuration.env_config import Config
 from commands.createtask import CreateTask
@@ -539,6 +541,18 @@ def take_battle_action():
     Endpoint that allows the user to take an action in the battle that they are currently in. Sends
     an error message
     """
+
+@app.route('/slack/commands', methods=['POST'])
+def handle_commands():
+    command = request.form.get('command')
+    user_id = request.form.get('user_id')
+    text = request.form.get('text')  # Contains command arguments
+
+    if command == '/battle':
+        return handle_battle_command(user_id, text)
+    if command == '/attack':
+        return handle_attack_command(user_id)
+
 
 
 if __name__ == "__main__":

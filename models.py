@@ -83,14 +83,18 @@ class Battle(db.Model):
 
     __tablename__ = "battle"
 
-    battle_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # The first player in the battle
-    player_id_1 = db.Column(db.String, unique=True)
+  # First player in the battle
+    player_id_1 = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
     hp_remaining_1 = db.Column(db.Integer)
     mp_remaining_1 = db.Column(db.Integer)
-    # The second player in the battle
-    player_id_2 = db.Column(db.String, unique=True)
+
+    # Second player in the battle
+    player_id_2 = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
     hp_remaining_2 = db.Column(db.Integer)
     mp_remaining_2 = db.Column(db.Integer)
+
+    # Relationships
+    player1 = db.relationship('Player', foreign_keys=[player_id_1])
+    player2 = db.relationship('Player', foreign_keys=[player_id_2])
 
     __table_args__ = (db.UniqueConstraint("battle_id"),)
