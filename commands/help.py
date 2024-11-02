@@ -33,8 +33,8 @@ class Help:
             ">To view completed tasks, just try the command */view-completed*, and there you go! SlackPoint would show you a list of completed tasks.",
         ]
         self.commands_dictionary["viewpending"] = [
-            "*View Pending Task*",
-            ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks.",
+            "*View Pending Tasks*",
+            ">To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of pending tasks.",
         ]
         self.commands_dictionary["leaderboard"] = [
             "*Leaderboard*",
@@ -55,6 +55,27 @@ class Help:
         self.commands_dictionary["summary"] = [
             "*Summary*",
             ">To view the summary, just try the command */summary*, and there you go! SlackPoint would show you a list of pending tasks, completed tasks and the current leaderboard.",
+        ]
+        self.commands_dictionary["createcharacter"] = [
+            "*Character Creation*",
+            ">To create a character, use the */create-character* command. Customize the stats as you please, but you can only allocate 20 points total.\n"
+            ">So, keep that in mind as you customize your character.\n\n"
+            ">*Character Class:* This determines the types of moves your character can use in battle, each class having its own set.\n\n"
+            ">*Strength (STR)*: The amount of strength a character has represents the amount of physical strength it has\n"
+            ">*Magic (MAG)*: The amount of magic prowess a character has to use magic attacks\n"
+            ">*Defense (DEF)*: A value used to reduce the amount of damage done by physical attacks\n"
+            ">*Resistance (RES)*: A value used to reduce the amount of damage done by magical attacks\n"
+            ">*Agility (AGL)*: A value used to determine the hit rate and dodge rate of the character. Whoever has more agility will get the first turn in battle.\n"
+            ">*Luck (LUK)*: A value used to slightly influence the chance to hit and dodge. It also factors into any RNG-based decisions that may occur during battle\n",
+        ]
+        self.commands_dictionary["allocatepoints"] = [
+            "*Allocate Points*",
+            ">To reallocate stats, use the */allocate-points* command. Customize the stats as you please, but you can only allocate as much as you currently have + any points you have in reserve.\n"
+            ">So, keep that in mind as you customize your character.\n",
+        ]
+        self.commands_dictionary["filtertasks"] = [
+            "*Filter Tasks*",
+            ">To filter a task, just try the command */filtertasks*, and you can filter them based on the tags.",
         ]
         self.payload = {"response_type": "ephemeral", "blocks": []}
 

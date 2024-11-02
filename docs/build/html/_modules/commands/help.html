@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>commands.help &mdash; slackpoint 2.0.0 documentation</title>
+  <title>commands.help &mdash; slackpoint-v2 2.2.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -26,7 +26,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> slackpoint
+            <a href="../../index.html" class="icon icon-home"> slackpoint-v2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -47,7 +47,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">slackpoint</a>
+          <a href="../../index.html">slackpoint-v2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -68,49 +68,70 @@
   <h1>Source code for commands.help</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
+
 <div class="viewcode-block" id="Help"><a class="viewcode-back" href="../../commands.html#commands.help.Help">[docs]</a><span class="k">class</span> <span class="nc">Help</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class handles the Help functionality.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">commands_dictionary</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">command_help</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;section&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{command_help}</span><span class="s2">&quot;</span>
-        <span class="p">}</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;mrkdwn&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{command_help}</span><span class="s2">&quot;</span><span class="p">},</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor to initialize command dictionary and payload object</span>
 
-<span class="sd">        :param: </span>
-<span class="sd">        :type: </span>
+<span class="sd">        :param:</span>
+<span class="sd">        :type:</span>
 <span class="sd">        :raise:</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        :rtype: None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;createtask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*Create Task*&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;To create a task, just try the command */create-task* and you would receive a message from Slack to fill out the details of the task.</span><span class="se">\n</span><span class="s2">&gt;Enter the description, deadline and the points of the task.</span><span class="se">\n</span><span class="s2">&gt;For example:</span><span class="se">\n</span><span class="s2">&gt;*Description*: Hey! This is my new task</span><span class="se">\n</span><span class="s2">&gt;*Deadline*: 12/31/2022 (just select a date from the date picker)</span><span class="se">\n</span><span class="s2">&gt;*Points*: 5 (select a point from 1 to 5)</span><span class="se">\n</span><span class="s2">&gt;And that&#39;s it! You should receive a reply from Slack with the generated *Task ID*.&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;viewcompleted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*View Completed Tasks*&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;To view completed tasks, just try the command */view-completed*, and there you go! SlackPoint would show you a list of completed tasks.&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;viewpending&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*View Pending Task*&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks.&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;leaderboard&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*Leaderboard*&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;To view the leaderboard, just try the command */leaderboard*, and SlackPoint would show you the top five contenders!&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;taskdone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*Complete Task*&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;To mark a task as Completed, just try the command */task-done* &lt;Task ID&gt;, and now you are one step closer at being one of the top five contenders!&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;help&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*Help*&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;Well, you are viewing it. You don&#39;t need my help in that case :D&quot;</span><span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;response_type&quot;</span><span class="p">:</span> <span class="s2">&quot;ephemeral&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]</span>
-        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;createtask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*Create Task*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To create a task, just try the command */create-task* and you would receive a message from Slack to fill out the details of the task.</span><span class="se">\n</span><span class="s2">&gt;Enter the description, deadline and the points of the task.</span><span class="se">\n</span><span class="s2">&gt;For example:</span><span class="se">\n</span><span class="s2">&gt;*Description*: Hey! This is my new task</span><span class="se">\n</span><span class="s2">&gt;*Deadline*: 12/31/2022 (just select a date from the date picker)</span><span class="se">\n</span><span class="s2">&gt;*Points*: 5 (select a point from 1 to 5)</span><span class="se">\n</span><span class="s2">&gt;And that&#39;s it! You should receive a reply from Slack with the generated *Task ID*.&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;viewcompleted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*View Completed Tasks*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To view completed tasks, just try the command */view-completed*, and there you go! SlackPoint would show you a list of completed tasks.&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;viewpending&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*View Pending Task*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To view pending tasks, just try the command */view-pending*, and there you go! SlackPoint would show you a list of completed tasks.&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;leaderboard&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*Leaderboard*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To view the leaderboard, just try the command */leaderboard*, and SlackPoint would show you the top five contenders!&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;taskdone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*Complete Task*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To mark a task as Completed, just try the command */task-done* &lt;Task ID&gt;, and now you are one step closer at being one of the top five contenders!&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;help&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*Help*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;Well, you are viewing it. You don&#39;t need my help in that case :D&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;edittask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*Edit Task*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To edit a task, just try the command */edit-task* &lt;Task ID&gt; and you would receive a message from Slack to update the details of the task.</span><span class="se">\n</span><span class="s2">&gt;Enter the description, deadline and the points of the task.</span><span class="se">\n</span><span class="s2">&gt;For example:</span><span class="se">\n</span><span class="s2">&gt;*Description*: Hey! This is my edited task</span><span class="se">\n</span><span class="s2">&gt;*Deadline*: 12/15/2022 (just select a date from the date picker)</span><span class="se">\n</span><span class="s2">&gt;*Points*: 5 (select a point from 1 to 5)</span><span class="se">\n</span><span class="s2">&gt;And that&#39;s it! You should receive a reply from Slack with the success message.&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*Summary*&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&gt;To view the summary, just try the command */summary*, and there you go! SlackPoint would show you a list of pending tasks, completed tasks and the current leaderboard.&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;response_type&quot;</span><span class="p">:</span> <span class="s2">&quot;ephemeral&quot;</span><span class="p">,</span> <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[]}</span>
 
 <div class="viewcode-block" id="Help.help_all"><a class="viewcode-back" href="../../commands.html#commands.help.Help.help_all">[docs]</a>    <span class="k">def</span> <span class="nf">help_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a payload with the help details for all commands</span>
 
-<span class="sd">        :param: </span>
-<span class="sd">        :type: </span>
+<span class="sd">        :param:</span>
+<span class="sd">        :type:</span>
 <span class="sd">        :raise:</span>
 <span class="sd">        :return: Payload object containing helper details of all commands</span>
 <span class="sd">        :rtype: dict[str, Any]</span>
@@ -123,7 +144,7 @@
         <span class="k">return</span> <span class="n">response_payload</span></div>
 
 <div class="viewcode-block" id="Help.help"><a class="viewcode-back" href="../../commands.html#commands.help.Help.help">[docs]</a>    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a payload blocks for particular command</span>
 
 <span class="sd">        :param command_name: Command name</span>
@@ -137,11 +158,15 @@
         <span class="n">command_name_block</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command_help</span><span class="p">)</span>
         <span class="n">command_help_desc_block</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command_help</span><span class="p">)</span>
         <span class="n">command_help</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands_dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">)</span>
-        <span class="n">command_name_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">command_name_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command_help</span><span class="o">=</span><span class="n">command_help</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">command_help_desc_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">command_help_desc_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command_help</span><span class="o">=</span><span class="n">command_help</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            
+        <span class="n">command_name_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">command_name_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">command_help</span><span class="o">=</span><span class="n">command_help</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">command_help_desc_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">command_help_desc_block</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">][</span>
+            <span class="s2">&quot;text&quot;</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command_help</span><span class="o">=</span><span class="n">command_help</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
         <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command_name_block</span><span class="p">)</span>
-        <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command_help_desc_block</span><span class="p">)</span> 
+        <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command_help_desc_block</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">blocks</span></div></div>
 </pre></div>
 
@@ -152,7 +177,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Mithil Dani, Neha Kale, Vansh Mehta, Rishikesh Yelne, Ritwik Vaidya.</p>
+    <p>&#169; Copyright 2022, Saksham Pandey, Nihar Rao, Shruti Verma, Palash Jhamb, Manish Shinde.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

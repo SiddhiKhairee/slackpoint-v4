@@ -58,6 +58,15 @@ class EditTask:
             },
             "label": {"type": "plain_text", "text": "Description", "emoji": True},
         }
+        block_tags = {
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "create_action_tags",
+                "initial_value": task.tags
+            },
+            "label": {"type": "plain_text", "text": "Tag", "emoji": True},
+        }
         block_deadline = {
             "type": "input",
             "element": {
@@ -124,6 +133,7 @@ class EditTask:
         blocks.append(block_deadline)
         blocks.append(block_points)
         blocks.append(block_actions)
+        blocks.append(block_tags)
         return blocks
 
     def is_editable(self):
@@ -146,7 +156,7 @@ class EditTask:
         elif exists is True and task_progress[0].progress == 0.0:
             return True, None
 
-    def edit_task(self, desc, points, deadline):
+    def edit_task(self, desc, points, deadline, tags):
         """
         Edits a task in database and returns payload with success message
 
@@ -164,14 +174,13 @@ class EditTask:
 
         """
         db.session.query(Task).filter_by(task_id=self.task_id).update(
-            dict(description=desc, points=points, deadline=deadline)
+            dict(description=desc, points=points, deadline=deadline, tags = tags)
         )
         db.session.commit()
         response = deepcopy(self.base_edit_task_block_format)
         response["text"]["text"] = response["text"]["text"].format(greeting=random.choice(self.greetings), id=self.task_id)
         self.payload["blocks"].append(response)
         return self.payload["blocks"]
-
 
     def get_task(self):
         task = db.session.query(Task).filter_by(task_id=self.task_id).first()

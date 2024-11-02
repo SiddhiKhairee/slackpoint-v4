@@ -1,6 +1,8 @@
 from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import json
 
 from commands.help import Help
@@ -9,11 +11,18 @@ from models import db
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
 
+from commands.battle_commands import handle_attack_command
+from commands.battle_commands import handle_battle_command
 from commands.viewpoints import ViewPoints
 from configuration.env_config import Config
 from commands.createtask import CreateTask
 from commands.edittask import EditTask
 from commands.summary import Summary
+
+from commands.createcharacter import CreateCharacter
+from commands.allocatepoints import AllocatePoints
+from commands.filtertasks import FilterTasks
+
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
@@ -22,7 +31,7 @@ from helpers import helper
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = Config.SQLALCHEMY_DATABASE_URI
 db.init_app(app)
-
+migrate = Migrate(app, db)
 
 # instantiating slack client
 slack_client = WebClient(Config.SLACK_BOT_TOKEN)
@@ -57,11 +66,14 @@ def interactive_endpoint():
                 desc = None
                 deadline = None
                 points = None
+                tags = None
                 for _, val in state_values.items():
                     if "create_action_description" in val:
                         desc = val["create_action_description"]["value"]
                     elif "create_action_deadline" in val:
                         deadline = val["create_action_deadline"]["selected_date"]
+                    elif "create_action_tags" in val:
+                        tags = val["create_action_tags"]["value"].split(",")
                     elif "create_action_points" in val:
                         if val["create_action_points"]["selected_option"] is not None:
                             points = val["create_action_points"]["selected_option"][
@@ -75,7 +87,7 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline)
+                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags=tags)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -91,14 +103,19 @@ def interactive_endpoint():
                 desc = None
                 deadline = None
                 points = None
+                tags = None
                 for _, val in state_values.items():
                     if "edit_action_description" in val:
                         desc = val["edit_action_description"]["value"]
                     elif "edit_action_deadline" in val:
                         deadline = val["edit_action_deadline"]["selected_date"]
+                    elif "create_action_tags" in val:
+                        tags = val["create_action_tags"]["value"].split(",")
                     elif "edit_action_points" in val:
                         if val["edit_action_points"]["selected_option"] is not None:
-                            points = val["edit_action_points"]["selected_option"]["value"]
+                            points = val["edit_action_points"]["selected_option"][
+                                "value"
+                            ]
                         else:
                             points = None
                 if desc is None or deadline is None or points is None:
@@ -107,10 +124,122 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline)
+                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags=tags)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
+
+            elif actions[0]["action_id"] == "create_character_button":
+                # Create character - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                cc = CreateCharacter(user_id)
+                state_values = payload["state"]["values"]
+
+                character_class = None
+                strength = None
+                magic = None
+                defense = None
+                resistance = None
+                agility = None
+                luck = None
+
+                # Looks through all character stats
+                for _, val in state_values.items():
+                    if "create_character_class" in val:
+                        character_class = val["create_character_class"]["selected_option"]["value"]
+                    if "create_character_strength" in val:
+                        strength = int(val["create_character_strength"]["value"])
+                    if "create_character_magic" in val:
+                        magic = int(val["create_character_magic"]["value"])
+                    if "create_character_defense" in val:
+                        defense = int(val["create_character_defense"]["value"])
+                    if "create_character_resistance" in val:
+                        resistance = int(val["create_character_resistance"]["value"])
+                    if "create_character_agility" in val:
+                        agility = int(val["create_character_agility"]["value"])
+                    if "create_character_luck" in val:
+                        luck = int(val["create_character_luck"]["value"])
+
+                # Checks if all fields are populated and if the total does not exceed 20
+                if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
+                        or strength + magic + defense + resistance + agility + luck > 20):
+                    # Get error payload if any fields are empty or the stat total is over 20
+                    error_blocks = helper.get_error_payload_blocks("createcharacter")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = cc.create_character(
+                        character_class=character_class,
+                        strength=strength,
+                        magic=magic,
+                        defense=defense,
+                        resistance=resistance,
+                        agility=agility,
+                        luck=luck
+                    )
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
+
+            elif actions[0]["action_id"] == "allocate_points_button":
+                # Create character - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                ap = AllocatePoints(user_id)
+                stat_total_boundary = ap.get_stat_total()
+                state_values = payload["state"]["values"]
+
+                character_class = None
+                strength = None
+                magic = None
+                defense = None
+                resistance = None
+                agility = None
+                luck = None
+
+                # Looks through all character stats
+                for _, val in state_values.items():
+                    if "allocate_points_class" in val:
+                        character_class = val["allocate_points_class"]["selected_option"]["value"]
+                    if "allocate_points_strength" in val:
+                        strength = int(val["allocate_points_strength"]["value"])
+                    if "allocate_points_magic" in val:
+                        magic = int(val["allocate_points_magic"]["value"])
+                    if "allocate_points_defense" in val:
+                        defense = int(val["allocate_points_defense"]["value"])
+                    if "allocate_points_resistance" in val:
+                        resistance = int(val["allocate_points_resistance"]["value"])
+                    if "allocate_points_agility" in val:
+                        agility = int(val["allocate_points_agility"]["value"])
+                    if "allocate_points_luck" in val:
+                        luck = int(val["allocate_points_luck"]["value"])
+
+                # Checks if all fields are populated and if the total does not exceed the stat total boundary
+                if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
+                        or strength + magic + defense + resistance + agility + luck > stat_total_boundary):
+                    # Get error payload if any fields are empty or exceeds the stat boundary
+                    error_blocks = helper.get_error_payload_blocks("allocatepoints")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = ap.allocate_points(
+                        character_class=character_class,
+                        strength=strength,
+                        magic=magic,
+                        defense=defense,
+                        resistance=resistance,
+                        agility=agility,
+                        luck=luck
+                    )
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
+
     return make_response("", 200)
 
 
@@ -173,6 +302,29 @@ def vcompleted():
     vp = ViewPoints(progress=1.0)
     payload = vp.get_list()
 
+    return jsonify(payload)
+
+
+@app.route("/filtertasks", methods=["POST"])
+def filtertasks():
+    """
+    Endpoint to view the completed tasks
+
+    :param:
+    :type:
+    :raise:
+    :return: Response object with filtered tasks
+    :rtype: Response
+
+    """
+
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    filters = data.get("text")
+
+    ft = FilterTasks()
+    payload = ft.filter_tasks(filters=filters)
 
     return jsonify(payload)
 
@@ -298,7 +450,7 @@ def edit():
 
     """
     data = request.form
-    task_id = int(data.get('text'))
+    task_id = int(data.get("text"))
     et = EditTask(task_id)
     allowed, error = et.is_editable()
     if not allowed:
@@ -328,6 +480,81 @@ def cron_reminder():
     msg_block = rem.reminder_msg_block(msg)
     helper.send_slack_message(msg_block)
     return jsonify({"success": True})
+
+
+@app.route("/create-character", methods=["POST"])
+def create_character():
+    """
+    Endpoint that creates a character given several values representative of character stats. This
+    should only be usable if the user does not already have a character
+    """
+    # Get payload blocks for character creation
+    data = request.form
+    user_id = data.get("user_id")
+    cc = CreateCharacter(user_id)
+    blocks = cc.create_character_input_blocks()
+
+    # Check if player already exists, if it does
+    allowed, error = cc.can_create_character()
+
+    if not allowed:
+        return jsonify(error)
+
+    channel_id = data.get("channel_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+
+@app.route("/allocate-points", methods=["POST"])
+def allocate_points():
+    """
+    Endpoint that allows the user to allocate any points that they have accrued from completing tasks
+    to their current stats.
+    """
+    # Get user information
+    data = request.form
+    user_id = data.get("user_id")
+    ap = AllocatePoints(user_id)
+
+    # Check if player already exists, if it does
+    allowed, error = ap.can_allocate_points()
+
+    if not allowed:
+        return jsonify(error)
+
+    # Get payload blocks
+    blocks = ap.allocate_points_input_blocks()
+
+    channel_id = data.get("channel_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+
+@app.route("/initiate-battle", methods=["POST"])
+def initiate_battle():
+    """
+    Endpoint that allows the user to initiate battle with another player
+    """
+
+
+@app.route("/take-battle-action", methods=["POST"])
+def take_battle_action():
+    """
+    Endpoint that allows the user to take an action in the battle that they are currently in. Sends
+    an error message
+    """
+
+
+@app.route('/slack/commands', methods=['POST'])
+def handle_commands():
+    command = request.form.get('command')
+    user_id = request.form.get('user_id')
+    text = request.form.get('text')  # Contains command arguments
+
+    if command == '/battle':
+        return handle_battle_command(user_id, text)
+    if command == '/attack':
+        return handle_attack_command(user_id)
 
 
 if __name__ == "__main__":

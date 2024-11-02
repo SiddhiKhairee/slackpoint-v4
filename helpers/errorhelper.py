@@ -45,7 +45,6 @@ class ErrorHelper:
         error["blocks"].extend(errorBlock_2)
         return error["blocks"]
 
-
     def get_command_help(self, command):
         """
         Get compiled error blocks for a particular command
@@ -57,6 +56,27 @@ class ErrorHelper:
         :rtype: str
 
         """
+
+        command_help = ""
+
+        # match(command):
+        #     case "create":
+        #         command_help = ">To create a task, follow the format: \n*-d* [description of task] *-p* [points of the task] *-ddl* [deadline of the task].\nFor example: */create* *-d* Hey! This is my new task *-p* 100 *-ddl* 15/10/2022"
+        #     case "no_task_id":
+        #         command_help = "The given Task ID does not exist! Please try again..."
+        #     case "task_already_done":
+        #         command_help = "The given Task was already completed!"
+        #     case "cannot_edit_completed_task":
+        #         command_help = "The given task cannot be edited because it has already been completed!"
+        #     case "task_done":
+        #         command_help = "Congratulations your task is completed now!"
+        #     case "task_edited":
+        #         command_help = "The given Task ID has been successfully edited!"
+        #     case "player_exists":
+        #         command_help = "A player already exists for this user, you cannot create another."
+        #     case "player_does_not_exist":
+        #         command_help = "You don't have a player to allocate points to! Use /create-character first to make a player for yourself."
+
         command_help = ""
         if command == "create":
             command_help = ">To create a task, follow the format: \n*-d* [description of task] *-p* [points of the task] *-ddl* [deadline of the task].\nFor example: */create* *-d* Hey! This is my new task *-p* 100 *-ddl* 15/10/2022"
@@ -70,4 +90,9 @@ class ErrorHelper:
             command_help = "Congratulations your task is completed now!"
         elif command == "task_edited":
             command_help = "The given Task ID has been successfully edited!"
+        elif command == "player_exists":
+            command_help = "A player already exists for this user, they cannot create another."
+        elif "player_does_not_exist":
+            command_help = "You don't have a player to allocate points to! Use /create-character first to make a player for yourself."
+
         return command_help

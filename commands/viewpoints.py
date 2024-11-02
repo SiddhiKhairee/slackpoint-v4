@@ -51,6 +51,7 @@ class ViewPoints:
                 Task.points,
                 Task.description,
                 Task.deadline,
+                Task.tags
             )
             .filter(Assignment.progress == self.progress)
             .all()
@@ -64,6 +65,7 @@ class ViewPoints:
                 points=task.points,
                 description=task.description,
                 deadline=task.deadline,
+                tags = task.tags
             )
             self.payload["blocks"].append(point)
         if not self.payload["blocks"]:
