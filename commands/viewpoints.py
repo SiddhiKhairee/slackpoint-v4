@@ -12,7 +12,7 @@ class ViewPoints:
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": ">Task ID: {id} ({points} SlackPoints) {description} [Deadline: {deadline}]",
+            "text": ">Task ID: {id} ({points} SlackPoints) {description} [Deadline: {deadline}] Tags:{tags}",
         },
     }
 
