@@ -73,6 +73,10 @@ class Help:
             ">To reallocate stats, use the */allocate-points* command. Customize the stats as you please, but you can only allocate as much as you currently have + any points you have in reserve."
             ">So, keep that in mind as you customize your character.\n",
         ]
+        self.commands_dictionary["filtertasks"] = [
+            "*Filter Tasks*",
+            ">To filter a task, just try the command */filtertasks*, and you can filter them based on the tags.",
+        ]
         self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def help_all(self):

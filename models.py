@@ -19,6 +19,7 @@ class Task(db.Model):
     deadline = db.Column(db.Date)
     created_on = db.Column(db.DateTime, default=datetime.now())
     updated_on = db.Column(db.DateTime)
+    tags = db.Column(db.JSON)
 
     __table_args__ = (db.UniqueConstraint("task_id"),)
 
