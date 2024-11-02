@@ -27,7 +27,15 @@ We're continuing their work to make sure you don't slack off :wink:
 
 https://user-images.githubusercontent.com/21088141/205798073-2269309d-5a60-43f9-a20a-74532c862d66.mp4
 
-## Demo
+## Demos
+
+### Demo of Commands
+
+[![](https://img.youtube.com/vi/Fu7Q7a5BYvw/0.jpg)](https://www.youtube.com/watch?v=Fu7Q7a5BYvw)
+
+### Selling Point Video
+
+[![](https://img.youtube.com/vi/ThgeL1FfqfM/0.jpg)](https://www.youtube.com/watch?v=ThgeL1FfqfM)
 
 ## Built with
   <img src = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" width="40" height="40"/> Flask
@@ -189,11 +197,19 @@ We have also defined much of our theoretical game design and database models in 
 
 ### Future of this project
 
-* Assign users to tasks while creating each task
-* Add a command to reassign users
 * Progress of a task is currently binary. It can be improved to allow a percentage progress improvement
 * Improve code coverage
 * UI/UX: Improve leaderboard command response to show gifs/graphs to further make the leaderboard more attractive and gamify it
+* **In-Depth Battle System:** Currently, there is only a foundation for the battle system ready. This is free to be changed as per the wishes of any developer due to the implementation’s simplicity, in terms of game mechanics.
+    * **Delay-Based:** Attacks use a delay-based battle system in which the type of attack determines how long it takes to take another action.
+    * **Type-Weakness + Dynamic Turn-Based Systems:** Each player is able to take multiple turns and is able to expend turns to change their class. Turn count can be manipulated by exploiting weaknesses and resistances.
+* **Task Delegation and Assignment:**
+    * While the task-tracking system is useful, introducing the ability to delegate them to specific people or teams would be very useful for team leaders to designate and organize tasks.
+    * Introduce permissions that only allow some people to have the power to resolve tasks for other people to distribute points, allowing for more order within the chat group.
+* **Team Formations and Tasks:** The introduction of teams would be greatly beneficial as most software development operates in teams.
+    * Assign tasks to a group of people and be able to distribute points across them all to make task delegation more accurate
+    * Teams can also be added to battle formations within the game design aspect to introduce more advanced gameplay mechanics and features, increasing activity between teammates.
+
 
 
 ## Developed by NC State students
