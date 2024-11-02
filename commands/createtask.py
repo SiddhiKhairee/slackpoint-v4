@@ -31,7 +31,7 @@ class CreateTask:
 
         """
         self.payload = {
-            "response_type": "ephemeral", 
+            "response_type": "ephemeral",
             "blocks": []
         }
 
