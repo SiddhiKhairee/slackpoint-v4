@@ -56,6 +56,10 @@ class Help:
             "*Summary*",
             ">To view the summary, just try the command */summary*, and there you go! SlackPoint would show you a list of pending tasks, completed tasks and the current leaderboard.",
         ]
+        self.commands_dictionary["filtertasks"] = [
+            "*Filter Tasks*",
+            ">To filter a task, just try the command */filtertasks*, and you can filter them based on the tags.",
+        ]
         self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def help_all(self):

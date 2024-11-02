@@ -54,6 +54,14 @@ class CreateTask:
             },
             "label": {"type": "plain_text", "text": "Description", "emoji": True},
         }
+        block_tags = {
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "create_action_tags",
+            },
+            "label": {"type": "plain_text", "text": "Tag", "emoji": True},
+        }
         block_deadline = {
             "type": "input",
             "element": {
@@ -114,10 +122,11 @@ class CreateTask:
         blocks.append(block_description)
         blocks.append(block_deadline)
         blocks.append(block_points)
+        blocks.append(block_tags)
         blocks.append(block_actions)
         return blocks
 
-    def create_task(self, desc, points, deadline):
+    def create_task(self, desc, points, deadline, tags):
         """
         Creates a task in database and returns payload with success message along with the newly created Task ID
 
@@ -127,6 +136,8 @@ class CreateTask:
         :type points: int
         :param deadline: Deadline of task
         :type deadline: Date
+        :param tags: Associated string tags
+        :type tags: json
         :raise:
         :return: Blocks list of response payload
         :rtype: list
@@ -137,6 +148,7 @@ class CreateTask:
         task.description = desc
         task.points = points
         task.deadline = deadline
+        task.tags = tags
         db.session.add(task)
         db.session.commit()
         db.session.refresh(task)
