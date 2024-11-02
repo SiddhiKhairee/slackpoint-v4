@@ -324,7 +324,7 @@ class AllocatePoints:
         total_stat_pool = p_str + p_mag + p_def + p_res + p_agl + p_luk + getattr(current_player, "stat_points_to_allocate")
 
         # Query the User that the player should be assigned to and update the information
-        db.session.query(Player).filter_by().update(
+        db.session.query(Player).filter_by(player_id=p_id).update(
             dict(
                 max_hp=300 + (20 * defense),
                 max_mp=100 + (10 * magic),

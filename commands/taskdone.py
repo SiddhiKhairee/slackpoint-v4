@@ -77,7 +77,19 @@ class TaskDone:
             my_query = self.get_or_create(current_slack_id)
             user_id = my_query.user_id
 
-            # TODO: Add a section here that increases the amount of points in Player if the User has a Player defined
+            # Increases the amount of points in Player if the User has a Player defined
+            current_user = db.session.query(User).filter_by(slack_user_id=current_slack_id).one()
+            self.p_id = getattr(current_user, "player_id")
+            player_existent = self.p_id is not None
+
+            if player_existent:
+                # Get the current task and player
+                curr_task = db.session.query(Task).filter_by(task_id=current_task_id).first()
+                curr_player = db.session.query(Player).filter_by(player_id=getattr(my_query, "player_id")).first()
+                # Update the values for the player
+                db.session.query(Player).filter_by(player_id=getattr(curr_player, "player_id")).update(
+                    dict(stat_points_to_allocate=getattr(curr_task, "points") + getattr(curr_player, "stat_points_to_allocate"))
+                )
 
             db.session.query(Assignment).filter_by(assignment_id=current_task_id).update(dict(progress=1.0, user_id=user_id))
             db.session.commit()
