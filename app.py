@@ -322,9 +322,10 @@ def filtertasks():
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
     filters = data.get("text")
+    tags = filters.split(',')
 
-    ft = FilterTasks()
-    payload = ft.filter_tasks(filters=filters)
+    ft = FilterTasks(tags)
+    payload = ft.filter_tasks()
 
     return jsonify(payload)
 
