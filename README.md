@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/21088141/205798073-2269309d-5a60-43f9-
 
 ### Demo of Commands
 
-[![](https://img.youtube.com/vi/Fu7Q7a5BYvw/0.jpg)](https://www.youtube.com/watch?v=Fu7Q7a5BYvw)
+[![](https://img.youtube.com/vi/RVLecAD7Zk0/0.jpg)](https://www.youtube.com/watch?v=RVLecAD7Zk0)
 
 ### Selling Point Video
 
@@ -108,7 +108,15 @@ Command: ``/viewcompleted [no parameter]``
 
 Above command will display a list of completed tasks
 
-#### **5. Leaderboard:**
+#### **5. Filter Tasks by Tag:**
+
+This command will allow you to get only the tasks from a certain category. Need all "Programming" tasks? Simply follow the template below:
+
+Command: ``/filtertasks [tag,tag,tag,tag,tag,...]``
+
+![image](https://github.com/user-attachments/assets/59483ac5-99dd-411d-918a-1bda594e3479)
+
+#### **6. Leaderboard:**
 
 Want to get competitive? Take a peek at the leaderboard and try to beat the winner!
 
@@ -118,7 +126,7 @@ Command: ``/leaderboard [no parameters]``
 
 It displays the list of the top performers on the channel along with their points.
 
-#### **6. Edit a task:**
+#### **7. Edit a task:**
 
 Made a mistake while adding a task? No problem! 
 Edit the task with values pre-populated as you had entered before. 
@@ -130,7 +138,7 @@ Command: ``/edit-task [task ID]``
 
 This particular command will edit your existing task with the description as ``Hey! This is my edited task`` having ``4`` points and a deadline of ``15th December 2022``
 
-#### **7. Summary:**
+#### **8. Summary:**
 
 Got too many tasks? Can't keep track of everything?
 Now use the summary command to get a summarized version of all tasks and the leaderboard!
@@ -143,7 +151,7 @@ Command: ``/summary [no parameters]``
 
 This command will display a list of pending tasks, completed tasks, and the leaderboard. 
 
-#### **8. Help:**
+#### **9. Help:**
 
 Newbie at using SlackPoint? You could use some help...
 
@@ -159,7 +167,7 @@ This will provide you will all the available commands and how to use them.
 Looking to have some fun with your tasks? Need to take a break? Feel free to have some fun with the gamified features added into SlackPoint as of v.3!
 Use your Task Points towards improving your player character and watch as you slowly get stronger from completing work tasks.
 
-#### **9. Character Creation:**
+#### **10. Character Creation:**
 
 Create your starting character class with any stats that you may want. This is fully customizable to give the players as much freedom as they can have
 in creating their character and getting stronger. They can also choose their moveset through the character class that they choose, each class having
@@ -169,7 +177,7 @@ Command: ``/create-character``
 
 ![Screenshot 2024-11-01 203209](https://github.com/user-attachments/assets/ece835ad-5a80-4252-a929-5f0f387cbeb1)
 
-#### **10. Allocate and Reallocate Your Points:**
+#### **11. Allocate and Reallocate Your Points:**
 
 Want to change classes or readjust your strategy for tackling some sort of challenge? Feel free to reallocate your stats at any point!
 You can even get extra points to allocate if you complete more tasks!
