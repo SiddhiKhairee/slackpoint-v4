@@ -66,7 +66,7 @@ class ViewPoints:
                 points=task.points,
                 description=task.description,
                 deadline=task.deadline,
-                tags=task.tags
+                tags=', '.join(task.tags) if task.tags else 'None'
             )
             self.payload["blocks"].append(point)
         if not self.payload["blocks"]:
