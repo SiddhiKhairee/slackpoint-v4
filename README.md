@@ -2,6 +2,7 @@
   
 ![This is an image](https://img.shields.io/badge/purpose-Software_Engineering-blue)
 [![DOI](https://zenodo.org/badge/865072057.svg)](https://doi.org/10.5281/zenodo.14015968)
+![](https://img.shields.io/badge/codestyle-pyflake-purple?labelColor=gray)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
@@ -164,6 +165,8 @@ Create your starting character class with any stats that you may want. This is f
 in creating their character and getting stronger. They can also choose their moveset through the character class that they choose, each class having
 its own style of attack.
 
+Command: ``/create-character``
+
 ![Screenshot 2024-11-01 203209](https://github.com/user-attachments/assets/ece835ad-5a80-4252-a929-5f0f387cbeb1)
 
 #### **10. Allocate and Reallocate Your Points:**
@@ -171,14 +174,15 @@ its own style of attack.
 Want to change classes or readjust your strategy for tackling some sort of challenge? Feel free to reallocate your stats at any point!
 You can even get extra points to allocate if you complete more tasks!
 
-![Screenshot 2024-11-01 224827](https://github.com/user-attachments/assets/7fc0dced-e9a7-40a5-8536-7bd111d31a6b)
+Command: ``/allocate-points``
 
+![Screenshot 2024-11-01 224827](https://github.com/user-attachments/assets/7fc0dced-e9a7-40a5-8536-7bd111d31a6b)
 
 ## Project documentation
 
 The `docs` folder incorporates all necessary documents and documentation in our project regarding its overall design. The sphinx documentation can be built by referencing our directions on the GitHub wiki regarding the compilation of the documentation: [Documentation Compilation Guide](https://github.com/brianhhuynh38/slackpoint-v3/wiki/Documentation-Compilation-Guide)
 
-We have also defined much of our theoretical game design and database models in our GitHub Wiki pages as well under the [Game Design]() section.
+We have also defined much of our theoretical game design and database models in our GitHub Wiki pages as well under the [Game Design](https://github.com/brianhhuynh38/slackpoint-v3/wiki/Game-Design) section.
 
 ### Project Dependencies
 
@@ -197,9 +201,9 @@ We have also defined much of our theoretical game design and database models in 
 
 ### Future of this project
 
-* Progress of a task is currently binary. It can be improved to allow a percentage progress improvement
-* Improve code coverage
-* UI/UX: Improve leaderboard command response to show gifs/graphs to further make the leaderboard more attractive and gamify it
+* **Progress of a task is currently binary.** It can be improved to allow a percentage progress improvement
+* **Improve code coverage**
+* **UI/UX:** Improve leaderboard command response to show gifs/graphs to further make the leaderboard more attractive and gamify it
 * **In-Depth Battle System:** Currently, there is only a foundation for the battle system ready. This is free to be changed as per the wishes of any developer due to the implementation’s simplicity, in terms of game mechanics.
     * **Delay-Based:** Attacks use a delay-based battle system in which the type of attack determines how long it takes to take another action.
     * **Type-Weakness + Dynamic Turn-Based Systems:** Each player is able to take multiple turns and is able to expend turns to change their class. Turn count can be manipulated by exploiting weaknesses and resistances.
