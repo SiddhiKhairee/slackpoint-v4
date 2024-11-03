@@ -1,1 +1,1 @@
-Saksham Pandey, Nihar Rao, Shruti Verma, Palash Jhamb, Manish Shinde nihar4276/slackpoint-v2: v2.2.0 (version2.2). Zenodo. https://zenodo.org/badge/latestdoi/564125838
+Shanmukh Chatadi, Brian Huynh, Manav Kamdar nihar4276/slackpoint-v3: v3.1-4 (version3.1-4). Zenodo. https://doi.org/10.5281/zenodo.14015968
