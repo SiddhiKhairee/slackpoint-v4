@@ -12,8 +12,8 @@ class ViewPoints:
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": ">Task ID: {id} ({points} SlackPoints) {description} [Deadline: {deadline}]" 
-            ">Tags:{tags}"
+            "text": ">Task ID: {id} ({points} SlackPoints) {description} [Deadline: {deadline}]\n"
+                    ">Tags: {tags}"
         },
     }
 
@@ -66,7 +66,7 @@ class ViewPoints:
                 points=task.points,
                 description=task.description,
                 deadline=task.deadline,
-                tags = task.tags
+                tags=task.tags
             )
             self.payload["blocks"].append(point)
         if not self.payload["blocks"]:

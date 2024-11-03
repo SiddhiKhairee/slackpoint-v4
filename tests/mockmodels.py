@@ -52,7 +52,7 @@ def mock_pending_task_1():
 
     """
     my_model = Task(
-        task_id=1, description="This is Task 1", points=10, deadline="2022-10-24"
+        task_id=1, description="This is Task 1", points=10, deadline="2022-10-24", tags="[This is a sample tag]"
     )
     return my_model
 
@@ -70,7 +70,7 @@ def mock_pending_task_2():
 
     """
     my_model = Task(
-        task_id=2, description="This is Task 2", points=2, deadline="2022-10-26"
+        task_id=2, description="This is Task 2", points=2, deadline="2022-10-26", tags="[This is testing tag]"
     )
     return my_model
 
@@ -88,7 +88,7 @@ def mock_completed_task_3():
 
     """
     my_model = Task(
-        task_id=3, description="This is Task 3", points=5, deadline="2022-08-24", tags={"This is a sample tag"}
+        task_id=3, description="This is Task 3", points=5, deadline="2022-08-24", tags="[This is a sample tag]"
     )
     return my_model
 
@@ -106,7 +106,7 @@ def mock_completed_task_4():
 
     """
     my_model = Task(
-        task_id=4, description="This is Task 4", points=5, deadline="2022-08-26", tags = {"This is a another sample tag"}
+        task_id=4, description="This is Task 4", points=5, deadline="2022-08-26", tags="[This is a another sample tag]"
     )
     return my_model
 
