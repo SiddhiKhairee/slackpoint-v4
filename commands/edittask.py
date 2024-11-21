@@ -135,7 +135,6 @@ class EditTask:
         blocks.append(block_points)
         blocks.append(block_actions)
         blocks.append(block_tags)
-        print(json.dumps(blocks))
         return blocks
 
     def is_editable(self):
@@ -186,5 +185,4 @@ class EditTask:
 
     def get_task(self):
         task = db.session.query(Task).filter_by(task_id=self.task_id).first()
-        print("task", task)
         return task
