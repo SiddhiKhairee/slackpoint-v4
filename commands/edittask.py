@@ -3,6 +3,7 @@ import random
 from models import *
 from datetime import date
 from helpers.errorhelper import ErrorHelper
+import json
 
 
 class EditTask:
@@ -63,7 +64,7 @@ class EditTask:
             "element": {
                 "type": "plain_text_input",
                 "action_id": "create_action_tags",
-                "initial_value": task.tags
+                "initial_value": " ".join(task.tags)
             },
             "label": {"type": "plain_text", "text": "Tag", "emoji": True},
         }
@@ -134,6 +135,7 @@ class EditTask:
         blocks.append(block_points)
         blocks.append(block_actions)
         blocks.append(block_tags)
+        print(json.dumps(blocks))
         return blocks
 
     def is_editable(self):
@@ -184,4 +186,5 @@ class EditTask:
 
     def get_task(self):
         task = db.session.query(Task).filter_by(task_id=self.task_id).first()
+        print("task", task)
         return task
