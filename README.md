@@ -236,6 +236,12 @@ Consider this homework to be one of our many steps at achieving our dreams! :win
 
 
 ### Our team
-- Brian Huynh, Manav Kamdar, Shanmukh Chatadi
+ <table>
+  <tr>
+    <td align="center"><a href="https://github.com/katydu"><img src="https://avatars.githubusercontent.com/katydu" width="100px;" alt=""/><br /><b>Min-Ting Tu</b></a><br /></td>
+    <td align="center"><a href="https://github.com/shambu2k"><img src="https://avatars.githubusercontent.com/shambu2k" width="100px;" alt=""/><br /><b>Sidharth Shambu</b></a><br /></td>
+    <td align="center"><a href="https://github.com/SiddhiKhairee"><img src="https://avatars.githubusercontent.com/SiddhiKhairee" width="100px;" alt=""/><br /><b>Siddhi Khairee</b></a><br /></td>
+  </tr>
+</table>
 ### Reach out to us!
 
