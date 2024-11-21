@@ -25,6 +25,7 @@ We're continuing their work to make sure you don't slack off :wink:
 
 - v1: Check them out [here](https://github.com/nehakale8/slackpoint)
 - v2: Check them out [here](github.com/nihar4276/slackpoint-v2)
+- v3: Check them out [here](github.com/brianhhuynh38/slackpoint-v3)
 
 https://user-images.githubusercontent.com/21088141/205798073-2269309d-5a60-43f9-a20a-74532c862d66.mp4
 
