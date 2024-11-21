@@ -155,6 +155,10 @@ and shortcuts section every time you would like to run this.
 
 ![image](https://github.com/user-attachments/assets/5eaeb9e8-86ec-4d05-a932-112965dfe115)
 
+Be aware that the Request URL:
+
+For example, for the `/create-task` function, inside the code(app.py) is called `/create` so you should use `https://my-ngrok-ip-thing/create` not `https://my-ngrok-ip-thing/create-task`! You should also check all ther command to make sure it's correct!
+
 
 ## Setting Up the `.env` File
 
