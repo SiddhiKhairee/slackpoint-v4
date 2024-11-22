@@ -3,6 +3,7 @@ import random
 from models import *
 from datetime import date
 from helpers.errorhelper import ErrorHelper
+import json
 
 
 class EditTask:
@@ -63,7 +64,7 @@ class EditTask:
             "element": {
                 "type": "plain_text_input",
                 "action_id": "create_action_tags",
-                "initial_value": task.tags
+                "initial_value": " ".join(task.tags)
             },
             "label": {"type": "plain_text", "text": "Tag", "emoji": True},
         }

@@ -13,7 +13,6 @@ class Reminders:
         #Fetch pending task list
         vp = ViewPoints(progress=0.0)
         pending_tasks = vp.get_list()
-        print(pending_tasks)
         listofdict = pending_tasks["blocks"]
         tom_tasks=[]
         for taskinfo in listofdict:
