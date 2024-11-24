@@ -67,6 +67,7 @@ def interactive_endpoint():
                 deadline = None
                 points = None
                 tags = None
+                assignee = None
                 for _, val in state_values.items():
                     if "create_action_description" in val:
                         desc = val["create_action_description"]["value"]
@@ -81,13 +82,15 @@ def interactive_endpoint():
                             ]
                         else:
                             points = None
+                    elif "create_action_assignee" in val:
+                        assignee = val["create_action_assignee"]["selected_user"]
                 if desc is None or deadline is None or points is None:
                     error_blocks = helper.get_error_payload_blocks("createtask")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags=tags)
+                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags=tags, assignee=assignee)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -104,6 +107,7 @@ def interactive_endpoint():
                 deadline = None
                 points = None
                 tags = None
+                assignee_slack_id = None
                 for _, val in state_values.items():
                     if "edit_action_description" in val:
                         desc = val["edit_action_description"]["value"]
@@ -118,13 +122,15 @@ def interactive_endpoint():
                             ]
                         else:
                             points = None
+                    elif "edit_action_assignee" in val:
+                        assignee_slack_id = val["edit_action_assignee"]["selected_user"]
                 if desc is None or deadline is None or points is None:
                     error_blocks = helper.get_error_payload_blocks("edittask")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags=tags)
+                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags=tags, assignee_slack_id=assignee_slack_id)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )

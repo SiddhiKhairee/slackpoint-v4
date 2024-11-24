@@ -30,6 +30,7 @@ class Assignment(db.Model):
     """
 
     __tablename__ = "assignment"
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     user_id = db.Column(db.Integer, ForeignKey("user.user_id"))
     assignment_id = db.Column(db.Integer, ForeignKey("task.task_id"), primary_key=True)
     progress = db.Column(db.Float)
@@ -50,6 +51,21 @@ class User(db.Model):
 
     __table_args__ = (db.UniqueConstraint("user_id"),)
 
+    def create_user(slack_user_id):
+        """
+        Creates a new user in the database if slack_user_id does not already exist.
+
+        :param slack_user_id: The Slack user ID of the user.
+        :type slack_user_id: str
+        :return: The user object.
+        :rtype: User
+        """
+        user = User.query.filter_by(slack_user_id=slack_user_id).first()
+        if user is None:
+            user = User(slack_user_id=slack_user_id)
+            db.session.add(user)
+            db.session.commit()
+        return user
 
 class Player(db.Model):
     """
