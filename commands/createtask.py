@@ -107,6 +107,19 @@ class CreateTask:
             },
             "label": {"type": "plain_text", "text": "Points", "emoji": True},
         }
+        block_task_assignee = {
+            "type": "input",
+            "element": {
+                "type": "users_select",
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select a user",
+                    "emoji": True,
+                },
+                "action_id": "create_action_assignee",
+            },
+            "label": {"type": "plain_text", "text": "Assignee", "emoji": True},
+        }
         block_actions_button = {
             "type": "button",
             "text": {
@@ -123,10 +136,11 @@ class CreateTask:
         blocks.append(block_deadline)
         blocks.append(block_points)
         blocks.append(block_tags)
+        blocks.append(block_task_assignee)
         blocks.append(block_actions)
         return blocks
 
-    def create_task(self, desc, points, deadline, tags):
+    def create_task(self, desc, points, deadline, tags, assignee):
         """
         Creates a task in database and returns payload with success message along with the newly created Task ID
 
@@ -159,6 +173,9 @@ class CreateTask:
         # add the task in assignment, without user assignment
         assignment = Assignment()
         assignment.assignment_id = id
+        if (assignee is not None):
+            user = User.create_user(assignee)
+            assignment.user_id = user.user_id
         assignment.progress = 0
         db.session.add(assignment)
         db.session.commit()

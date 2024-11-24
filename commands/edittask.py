@@ -50,6 +50,8 @@ class EditTask:
 
         """
         task = self.get_task()
+        assignment = self.get_assignment()
+        assignee_slack_id = self.get_user(assignment.user_id).slack_user_id
         block_description = {
             "type": "input",
             "element": {
@@ -117,6 +119,20 @@ class EditTask:
             },
             "label": {"type": "plain_text", "text": "Points", "emoji": True},
         }
+        block_task_assignee = {
+            "type": "input",
+            "element": {
+                "type": "users_select",
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select a user",
+                    "emoji": True,
+                },
+                "action_id": "edit_action_assignee",
+                "initial_user": assignee_slack_id
+            },
+            "label": {"type": "plain_text", "text": "Assignee", "emoji": True},
+        }
         block_actions_button = {
             "type": "button",
             "text": {
@@ -133,8 +149,9 @@ class EditTask:
         blocks.append(block_description)
         blocks.append(block_deadline)
         blocks.append(block_points)
-        blocks.append(block_actions)
+        blocks.append(block_task_assignee)
         blocks.append(block_tags)
+        blocks.append(block_actions)
         return blocks
 
     def is_editable(self):
@@ -157,7 +174,7 @@ class EditTask:
         elif exists is True and task_progress[0].progress == 0.0:
             return True, None
 
-    def edit_task(self, desc, points, deadline, tags):
+    def edit_task(self, desc, points, deadline, tags, assignee_slack_id):
         """
         Edits a task in database and returns payload with success message
 
@@ -169,13 +186,29 @@ class EditTask:
         :type deadline: Date
         :param deadline: ID of task
         :type deadline: int
+        :param tags: Associated string tags
+        :type tags: json
+        :param assignee_slack_id: Slack ID of assignee
+        :type assignee_slack_id: str
         :raise:
         :return: Blocks list of response payload
         :rtype: list
 
         """
+
+        # Create user if does not exists
+        user = db.session.query(User).filter_by(slack_user_id=assignee_slack_id).first()
+        if user is None:
+            user = User(slack_user_id=assignee_slack_id)
+            db.session.add(user)
+            db.session.commit()
+            db.session.refresh(user)
+
         db.session.query(Task).filter_by(task_id=self.task_id).update(
             dict(description=desc, points=points, deadline=deadline, tags = tags)
+        )
+        db.session.query(Assignment).filter_by(assignment_id=self.task_id).update(
+            dict(user_id=user.user_id)
         )
         db.session.commit()
         response = deepcopy(self.base_edit_task_block_format)
@@ -186,3 +219,11 @@ class EditTask:
     def get_task(self):
         task = db.session.query(Task).filter_by(task_id=self.task_id).first()
         return task
+
+    def get_assignment(self):
+        assignment = db.session.query(Assignment).filter_by(assignment_id=self.task_id).first()
+        return assignment
+
+    def get_user(self, user_id):
+        user = db.session.query(User).filter_by(user_id=user_id).first()
+        return user
