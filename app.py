@@ -315,6 +315,27 @@ def interactive_endpoint():
                 else:
                     blocks = store.buy_item(product_id=product_id, slack_user_id=user_id)
                     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+            elif actions[0]["action_id"] == "feed_pet_action_button":
+                # Feed Pet - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                ct = CreatePet()
+                state_values = payload["state"]["values"]
+                inventory_id = None
+                for _, val in state_values.items():
+                    if "feed_pet_inventory_select" in val:
+                        inventory_id = val["feed_pet_inventory_select"]["selected_option"]["value"]
+                if inventory_id is None:
+                    error_blocks = helper.get_error_payload_blocks("feed-pet")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = ct.feed_pet(inventory_id=inventory_id, slack_user_id=user_id)
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
 
     return make_response("", 200)
 
@@ -669,6 +690,21 @@ def check_pet_status():
     user_id = data.get("user_id")
 
     blocks = ct.show_pet_status(slack_user_id=user_id)
+
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+@app.route("/feed-pet", methods=["POST"])
+def feed_pet():
+    """
+    Endpoint that allows the user to feed their pet
+    """
+    ct = CreatePet()
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+
+    blocks = ct.feed_pet_input_blocks(slack_user_id=user_id)
 
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
