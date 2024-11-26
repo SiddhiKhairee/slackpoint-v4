@@ -1,16 +1,18 @@
 from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
+from flask import Flask
 
 from commands.help import Help
 from commands.reminders import Reminders
 from models import db
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
-
+from commands.showinventory import ShowInventory
 from commands.battle_commands import handle_attack_command
 from commands.battle_commands import handle_battle_command
 from commands.viewpoints import ViewPoints
@@ -18,14 +20,17 @@ from configuration.env_config import Config
 from commands.createtask import CreateTask
 from commands.edittask import EditTask
 from commands.summary import Summary
-
+from commands.showstore import ShowStore
 from commands.createcharacter import CreateCharacter
 from commands.allocatepoints import AllocatePoints
 from commands.filtertasks import FilterTasks
+from commands.createpet import CreatePet
 
+from models import Product
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
+
 
 
 app = Flask(__name__)
@@ -38,7 +43,27 @@ slack_client = WebClient(Config.SLACK_BOT_TOKEN)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
+def add_default_products():
+    # Check if the product table is empty
+    if db.session.query(Product).count() == 0:
+        # Add default products
+        product1 = Product(name="Large food", price=3, description="Restores 3 HP")
+        product2 = Product(name="Medium food", price=2, description="Restores 2 HP")
+        product3 = Product(name="Small food", price=1, description="Restores 1 HP")
+        db.session.add(product1)
+        db.session.add(product2)
+        db.session.add(product3)
+        db.session.commit()
 
+@app.cli.command("before_start")
+@with_appcontext
+def initialize_db():
+    # Create the tables if they don't exist
+    db.create_all()
+
+    # Ensure the app context is available when adding products
+    with app.app_context():
+        add_default_products()
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -245,6 +270,26 @@ def interactive_endpoint():
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
+            elif actions[0]["action_id"] == "create_pet_action_button":
+                # Create Pet - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                ct = CreatePet()
+                state_values = payload["state"]["values"]
+                pet_name = None
+                for _, val in state_values.items():
+                    if "create_action_pet_name" in val:
+                        pet_name = val["create_action_pet_name"]["value"]
+                if pet_name is None:
+                    error_blocks = helper.get_error_payload_blocks("create-pet")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = ct.create_pet(pet_name=pet_name, slack_user_id=user_id)
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks)
 
     return make_response("", 200)
 
@@ -354,6 +399,26 @@ def taskdone(): #added
     payload = td.update_points()
     return jsonify(payload)
 
+
+
+@app.route("/showstore", methods=["POST"])
+def showstore():
+    """
+    Endpoint to view the store
+
+    :param:
+    :type:
+    :raise:
+    :return: Response object with payload object containing details of items in the store
+    :rtype: Response
+
+    """
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    blocks = ShowStore().create_show_store_blocks()
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks, text="Store")    
+    return Response(), 200
 
 @app.route("/create", methods=["POST"])
 def create(): #added
@@ -533,6 +598,35 @@ def allocate_points(): #added
     blocks = ap.allocate_points_input_blocks()
 
     channel_id = data.get("channel_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+@app.route("/create-pet", methods=["POST"])
+def create_pet():
+    """
+    Endpoint that creates a pet for the user
+    """
+    ct = CreatePet()
+    blocks = ct.create_pet_input_blocks()
+
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+@app.route("/pet-status", methods=["POST"])
+def check_pet_status():
+    """
+    Endpoint that allows the user to check the status of their pet
+    """
+    ct = CreatePet()
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+
+    blocks = ct.show_pet_status(slack_user_id=user_id)
+
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
