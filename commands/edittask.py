@@ -4,6 +4,7 @@ from models import *
 from datetime import date
 from helpers.errorhelper import ErrorHelper
 import json
+import helpers.user_helper as uh
 
 
 class EditTask:
@@ -196,14 +197,7 @@ class EditTask:
 
         """
 
-        # Create user if does not exists
-        user = db.session.query(User).filter_by(slack_user_id=assignee_slack_id).first()
-        if user is None:
-            user = User(slack_user_id=assignee_slack_id)
-            db.session.add(user)
-            db.session.commit()
-            db.session.refresh(user)
-
+        user = uh.check_user_exists(assignee_slack_id)
         db.session.query(Task).filter_by(task_id=self.task_id).update(
             dict(description=desc, points=points, deadline=deadline, tags = tags)
         )

@@ -6,8 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
 from flask import Flask
-
+from models import Inventory
 from commands.help import Help
+import helpers.user_helper as uh
 from commands.reminders import Reminders
 from models import db
 from slack import WebClient
@@ -64,6 +65,10 @@ def initialize_db():
     # Ensure the app context is available when adding products
     with app.app_context():
         add_default_products()
+        # add default inventory
+        #add_default_inventory()
+
+    
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -399,7 +404,23 @@ def taskdone(): #added
     payload = td.update_points()
     return jsonify(payload)
 
+@app.route("/showinventory", methods=["POST"])
+def showinventory():
+    """
+    Endpoint to view the inventory
 
+    :param:
+    :type:
+    :raise:
+    :return: Response object with payload object containing details of items in the inventory
+    :rtype: Response
+
+    """
+    data = request.form
+    user_id = data.get("user_id")
+    print(user_id)
+    ShowInventory().add_default_inventory(userID=user_id)
+    return ShowInventory().get_inventory(user_id)
 
 @app.route("/showstore", methods=["POST"])
 def showstore():
@@ -660,3 +681,4 @@ def handle_commands(): #added
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)
+    
