@@ -130,3 +130,18 @@ class Battle(db.Model):
     player2 = db.relationship('Player', foreign_keys=[player_id_2])
 
     __table_args__ = (db.UniqueConstraint("battle_id"),)
+
+class Pet(db.Model):
+    """
+    This class is a database model for the Pet entity. This stores information on the Player's pet,
+    including its name, type, and stats.
+    """
+
+    __tablename__ = "pet"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, ForeignKey("user.user_id"))
+    pet_name = db.Column(db.String)
+    hp = db.Column(db.Integer)
+
+    __table_args__ = (db.UniqueConstraint("id"),)
