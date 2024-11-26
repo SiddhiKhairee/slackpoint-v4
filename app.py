@@ -1,6 +1,7 @@
 from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
@@ -23,6 +24,8 @@ from commands.showstore import ShowStore
 from commands.createcharacter import CreateCharacter
 from commands.allocatepoints import AllocatePoints
 from commands.filtertasks import FilterTasks
+from commands.createpet import CreatePet
+
 from models import Product
 from helpers.errorhelper import ErrorHelper
 from json import dumps
@@ -52,8 +55,8 @@ def add_default_products():
         db.session.add(product3)
         db.session.commit()
 
-# Initialize the database and add default products
-@app.before_request
+@app.cli.command("before_start")
+@with_appcontext
 def initialize_db():
     # Create the tables if they don't exist
     db.create_all()
@@ -267,6 +270,26 @@ def interactive_endpoint():
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
+            elif actions[0]["action_id"] == "create_pet_action_button":
+                # Create Pet - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                ct = CreatePet()
+                state_values = payload["state"]["values"]
+                pet_name = None
+                for _, val in state_values.items():
+                    if "create_action_pet_name" in val:
+                        pet_name = val["create_action_pet_name"]["value"]
+                if pet_name is None:
+                    error_blocks = helper.get_error_payload_blocks("create-pet")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = ct.create_pet(pet_name=pet_name, slack_user_id=user_id)
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks)
 
     return make_response("", 200)
 
@@ -575,6 +598,35 @@ def allocate_points():
     blocks = ap.allocate_points_input_blocks()
 
     channel_id = data.get("channel_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+@app.route("/create-pet", methods=["POST"])
+def create_pet():
+    """
+    Endpoint that creates a pet for the user
+    """
+    ct = CreatePet()
+    blocks = ct.create_pet_input_blocks()
+
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+@app.route("/pet-status", methods=["POST"])
+def check_pet_status():
+    """
+    Endpoint that allows the user to check the status of their pet
+    """
+    ct = CreatePet()
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+
+    blocks = ct.show_pet_status(slack_user_id=user_id)
+
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 

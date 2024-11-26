@@ -191,8 +191,7 @@ that allow pgAdmin to run as well.
 
 To create tables in the database,
 ```bash
-First run the command 'flask shell'
-Next command to create the database - 'db.create_all()'
+flask before_start
 ```
 
 ## Running the Server
