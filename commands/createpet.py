@@ -24,6 +24,14 @@ class CreatePet:
         }
     }
 
+    base_only_1_pet_block_format = {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "You can only have one pet at a time. Use the `/pet-status` command to check your pet's status."
+        }
+    }
+
     default_pet_starting_hp = 5
 
     def __init__(self):
@@ -40,7 +48,12 @@ class CreatePet:
             "blocks": []
         }
 
-    def create_pet_input_blocks(self):
+    def create_pet_input_blocks(self, slack_user_id):
+        user = uh.check_user_exists(slack_user_id)
+        pet = db.session.query(Pet).filter_by(user_id=user.user_id).first()
+        if pet is not None:
+            return [self.base_only_1_pet_block_format]
+        
         block_pet_name_input = {
             "type": "input",
             "element": {
