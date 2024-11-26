@@ -1,6 +1,7 @@
 from copy import deepcopy
 from models import *
 from datetime import date
+import helpers.user_helper as uh
 
 class CreatePet:
     """
@@ -78,12 +79,8 @@ class CreatePet:
         :return: The pet that was created
         :rtype: Pet
         """
-        user = db.session.query(User).filter_by(slack_user_id=slack_user_id).first()
-        if user is None:
-            user = User(slack_user_id=slack_user_id)
-            db.session.add(user)
-            db.session.commit()
-            db.session.refresh(user)
+        user = uh.check_user_exists(slack_user_id)
+        
 
         pet = Pet(user_id=user.user_id, pet_name=pet_name, hp=self.default_pet_starting_hp)
         db.session.add(pet)
@@ -103,12 +100,7 @@ class CreatePet:
         :return: The pet status
         :rtype: Pet
         """
-        user = db.session.query(User).filter_by(slack_user_id=slack_user_id).first()
-        if user is None:
-            user = User(slack_user_id=slack_user_id)
-            db.session.add(user)
-            db.session.commit()
-            db.session.refresh(user)
+        user = uh.check_user_exists(slack_user_id)
 
         pet = db.session.query(Pet).filter_by(user_id=user.user_id).first()
         if pet is None:
