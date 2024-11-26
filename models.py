@@ -6,6 +6,19 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+class Product(db.Model):
+    """
+    This class is a database model for the Product entity.
+    """
+    __tablename__ = "product"
+
+    product_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    name = db.Column(db.String)
+    price = db.Column(db.Float)
+    description = db.Column(db.Text)
+
+    __table_args__ = (db.UniqueConstraint("product_id"),)
+
 class Task(db.Model):
     """
     This class is a database model for the Task entity.

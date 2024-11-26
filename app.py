@@ -18,7 +18,7 @@ from configuration.env_config import Config
 from commands.createtask import CreateTask
 from commands.edittask import EditTask
 from commands.summary import Summary
-
+from commands.showstore import ShowStore
 from commands.createcharacter import CreateCharacter
 from commands.allocatepoints import AllocatePoints
 from commands.filtertasks import FilterTasks
@@ -354,6 +354,25 @@ def taskdone():
     payload = td.update_points()
     return jsonify(payload)
 
+@app.route("/showstore", methods=["POST"])
+def showstore():
+    """
+    Endpoint to view the store
+
+    :param:
+    :type:
+    :raise:
+    :return: Response object with payload object containing details of items in the store
+    :rtype: Response
+
+    """
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    ss = ShowStore()
+    blocks = ss.show_store()
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks, text="Store")
+    return Response(), 200
 
 @app.route("/create", methods=["POST"])
 def create():
