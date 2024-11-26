@@ -13,13 +13,13 @@ class AllocatePoints:
         "text": {
             "type": "mrkdwn",
             "text": ">You have come to understand a new power...\n\n"
-                    ">*Character Class*: {prevClass} -> {newClass}\n\n"
-                    ">*STR*: {prevSTR} -> {newSTR} ({diffSTR})\n"
-                    ">*MAG*: {prevMAG} -> {newMAG} ({diffMAG})\n"
-                    ">*DEF*: {prevDEF} -> {newDEF} ({diffDEF})\n"
-                    ">*RES*: {prevRES} -> {newRES} ({diffRES})\n"
-                    ">*AGL*: {prevAGL} -> {newAGL} ({diffAGL})\n"
-                    ">*LUK*: {prevLUK} -> {newLUK} ({diffLUK})\n",
+            ">*Character Class*: {prevClass} -> {newClass}\n\n"
+            ">*STR*: {prevSTR} -> {newSTR} ({diffSTR})\n"
+            ">*MAG*: {prevMAG} -> {newMAG} ({diffMAG})\n"
+            ">*DEF*: {prevDEF} -> {newDEF} ({diffDEF})\n"
+            ">*RES*: {prevRES} -> {newRES} ({diffRES})\n"
+            ">*AGL*: {prevAGL} -> {newAGL} ({diffAGL})\n"
+            ">*LUK*: {prevLUK} -> {newLUK} ({diffLUK})\n",
         },
     }
 
@@ -37,10 +37,7 @@ class AllocatePoints:
 
         self.slack_user_id = slack_user_id
 
-        self.payload = {
-            "response_type": "ephemeral",
-            "blocks": []
-        }
+        self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def allocate_points_input_blocks(self):
         """
@@ -65,33 +62,45 @@ class AllocatePoints:
                     "elements": [
                         {
                             "type": "text",
-                            "text": "Change your class below if you'd like to. This will change your move set in battle."
+                            "text": "Change your class below if you'd like to. This will change your move set in battle.",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         }
         block_class_selection = {
             "type": "input",
             "element": {
                 "type": "static_select",
-                "placeholder": {"type": "plain_text", "text": "Select a class", "emoji": True},
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select a class",
+                    "emoji": True,
+                },
                 "options": [
                     {
-                        "text": {"type": "plain_text", "text": "Swordmaster", "emoji": False},
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Swordmaster",
+                            "emoji": False,
+                        },
                         "value": "Swordmaster",
                     },
                     {
-                        "text": {"type": "plain_text", "text": "Fire Mage", "emoji": False},
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Fire Mage",
+                            "emoji": False,
+                        },
                         "value": "Fire Mage",
-                    }
+                    },
                 ],
                 "action_id": "allocate_points_class",
             },
             "hint": {
                 "type": "plain_text",
                 "text": "Select a character class for yourself! This determines what moves you will be able to use in battle.",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Character Class", "emoji": True},
         }
@@ -104,12 +113,14 @@ class AllocatePoints:
                         {
                             "type": "text",
                             "text": "Set your stats down below. You can allocate your new points to your stats or rearrange"
-                                    "your stats and class as long as the total is equal to your total stats.\n\n"
-                                    "You have {} points to allocate.".format(getattr(current_player, "stat_points_to_allocate"))
+                            "your stats and class as long as the total is equal to your total stats.\n\n"
+                            "You have {} points to allocate.".format(
+                                getattr(current_player, "stat_points_to_allocate")
+                            ),
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         }
         block_strength = {
             "type": "input",
@@ -124,7 +135,7 @@ class AllocatePoints:
             "hint": {
                 "type": "plain_text",
                 "text": "The amount of strength a character has represents the amount of physical strength it has",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Strength", "emoji": True},
         }
@@ -141,7 +152,7 @@ class AllocatePoints:
             "hint": {
                 "type": "plain_text",
                 "text": "The amount of magic prowess a character has to use magic attacks",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Magic", "emoji": True},
         }
@@ -158,7 +169,7 @@ class AllocatePoints:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to reduce the amount of damage done by physical attacks",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Defense", "emoji": True},
         }
@@ -175,7 +186,7 @@ class AllocatePoints:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to reduce the amount of damage done by magical attacks",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Resistance", "emoji": True},
         }
@@ -192,7 +203,7 @@ class AllocatePoints:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to determine the hit rate and dodge rate of the character. Whoever has more agility will get the first turn in battle.",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Agility", "emoji": True},
         }
@@ -209,16 +220,13 @@ class AllocatePoints:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to slightly influence the chance to hit and dodge. It also factors into any RNG-based decisions that may occur during battle",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Luck", "emoji": True},
         }
         block_actions_button = {
             "type": "button",
-            "text": {
-                "type": "plain_text",
-                "text": "Update Player"
-            },
+            "text": {"type": "plain_text", "text": "Update Player"},
             "action_id": "allocate_points_button",
         }
         block_actions = {"type": "actions", "elements": []}
@@ -250,7 +258,9 @@ class AllocatePoints:
         helper = ErrorHelper()
 
         # Find if player_id exists in User
-        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        current_user = (
+            db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        )
         self.p_id = getattr(current_user, "player_id")
         player_existent = self.p_id is not None
 
@@ -270,7 +280,9 @@ class AllocatePoints:
 
         # Find if player_id exists in User
         current_slack_user_id = self.slack_user_id
-        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        current_user = (
+            db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        )
         p_id = getattr(current_user, "player_id")
 
         # Get player and get all statistical attributes
@@ -286,8 +298,16 @@ class AllocatePoints:
         # Return the sum of all the stats and the points still left to allocate
         return p_str + p_mag + p_def + p_res + p_agl + p_luk + p_pta
 
-    def allocate_points(self, character_class: str, strength: int, magic: int, defense: int, resistance: int,
-                        agility: int, luck: int) -> list:
+    def allocate_points(
+        self,
+        character_class: str,
+        strength: int,
+        magic: int,
+        defense: int,
+        resistance: int,
+        agility: int,
+        luck: int,
+    ) -> list:
         """
         Gets the character from the database and updates all stats and class fields. Returns a payload containinf success information.
 
@@ -306,7 +326,9 @@ class AllocatePoints:
 
         # Find if player_id exists in User
         current_slack_user_id = self.slack_user_id
-        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        current_user = (
+            db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        )
         p_id = getattr(current_user, "player_id")
 
         # Get player and get all statistical attributes
@@ -321,7 +343,15 @@ class AllocatePoints:
         p_agl = int(getattr(current_player, "agility"))
         p_luk = int(getattr(current_player, "luck"))
 
-        total_stat_pool = p_str + p_mag + p_def + p_res + p_agl + p_luk + getattr(current_player, "stat_points_to_allocate")
+        total_stat_pool = (
+            p_str
+            + p_mag
+            + p_def
+            + p_res
+            + p_agl
+            + p_luk
+            + getattr(current_player, "stat_points_to_allocate")
+        )
 
         # Query the User that the player should be assigned to and update the information
         db.session.query(Player).filter_by(player_id=p_id).update(
@@ -335,20 +365,39 @@ class AllocatePoints:
                 resistance=resistance,
                 agility=agility,
                 luck=luck,
-                stat_points_to_allocate=total_stat_pool - strength - magic - defense - resistance - agility - luck
+                stat_points_to_allocate=total_stat_pool
+                - strength
+                - magic
+                - defense
+                - resistance
+                - agility
+                - luck,
             )
         )
         db.session.commit()
 
         response = deepcopy(self.base_allocate_points_block_format)
         response["text"]["text"] = response["text"]["text"].format(
-            prevClass=p_class, newClass=character_class,
-            prevSTR=p_str, newSTR=strength, diffSTR=strength - p_str,
-            prevMAG=p_mag, newMAG=magic, diffMAG=magic - p_mag,
-            prevDEF=p_def, newDEF=defense, diffDEF=defense - p_def,
-            prevRES=p_res, newRES=resistance, diffRES=resistance - p_res,
-            prevAGL=p_agl, newAGL=agility, diffAGL=agility - p_agl,
-            prevLUK=p_luk, newLUK=luck, diffLUK=luck - p_luk,
+            prevClass=p_class,
+            newClass=character_class,
+            prevSTR=p_str,
+            newSTR=strength,
+            diffSTR=strength - p_str,
+            prevMAG=p_mag,
+            newMAG=magic,
+            diffMAG=magic - p_mag,
+            prevDEF=p_def,
+            newDEF=defense,
+            diffDEF=defense - p_def,
+            prevRES=p_res,
+            newRES=resistance,
+            diffRES=resistance - p_res,
+            prevAGL=p_agl,
+            newAGL=agility,
+            diffAGL=agility - p_agl,
+            prevLUK=p_luk,
+            newLUK=luck,
+            diffLUK=luck - p_luk,
         )
         self.payload["blocks"].append(response)
         return self.payload["blocks"]

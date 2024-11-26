@@ -62,7 +62,7 @@ class Help:
         ]
         self.commands_dictionary["createpet"] = [
             "*Create Pet*",
-            ">To create a pet, just try the command */create-pet* and you would receive a message from Slack to fill out the details of the pet.\n>Enter the name of the pet. \n Each user can have only one pet.",        
+            ">To create a pet, just try the command */create-pet* and you would receive a message from Slack to fill out the details of the pet.\n>Enter the name of the pet. \n Each user can have only one pet.",
         ]
         self.commands_dictionary["feedpet"] = [
             "*Feed Pet*",

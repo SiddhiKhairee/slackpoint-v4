@@ -26,12 +26,15 @@ from commands.createcharacter import CreateCharacter
 from commands.allocatepoints import AllocatePoints
 from commands.filtertasks import FilterTasks
 from commands.createpet import CreatePet
+from commands.pomodorotimer import PomodoroTimer
+
 
 from models import Product
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
-
+import time
+import threading
 
 
 app = Flask(__name__)
@@ -44,6 +47,8 @@ slack_client = WebClient(Config.SLACK_BOT_TOKEN)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
+
+
 def add_default_products():
     # Check if the product table is empty
     if db.session.query(Product).count() == 0:
@@ -56,6 +61,7 @@ def add_default_products():
         db.session.add(product3)
         db.session.commit()
 
+
 @app.cli.command("before_start")
 @with_appcontext
 def initialize_db():
@@ -66,9 +72,8 @@ def initialize_db():
     with app.app_context():
         add_default_products()
         # add default inventory
-        #add_default_inventory()
+        # add_default_inventory()
 
-    
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -120,7 +125,13 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.create_task(desc=desc, points=points, deadline=deadline, tags=tags, assignee=assignee)
+                    blocks = ct.create_task(
+                        desc=desc,
+                        points=points,
+                        deadline=deadline,
+                        tags=tags,
+                        assignee=assignee,
+                    )
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -160,7 +171,13 @@ def interactive_endpoint():
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = et.edit_task(desc=desc, points=points, deadline=deadline, tags=tags, assignee_slack_id=assignee_slack_id)
+                    blocks = et.edit_task(
+                        desc=desc,
+                        points=points,
+                        deadline=deadline,
+                        tags=tags,
+                        assignee_slack_id=assignee_slack_id,
+                    )
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
@@ -184,7 +201,9 @@ def interactive_endpoint():
                 # Looks through all character stats
                 for _, val in state_values.items():
                     if "create_character_class" in val:
-                        character_class = val["create_character_class"]["selected_option"]["value"]
+                        character_class = val["create_character_class"][
+                            "selected_option"
+                        ]["value"]
                     if "create_character_strength" in val:
                         strength = int(val["create_character_strength"]["value"])
                     if "create_character_magic" in val:
@@ -199,8 +218,21 @@ def interactive_endpoint():
                         luck = int(val["create_character_luck"]["value"])
 
                 # Checks if all fields are populated and if the total does not exceed 20
-                if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
-                        or strength + magic + defense + resistance + agility + luck > 20):
+                if (
+                    all(
+                        stat is None
+                        for stat in [
+                            character_class,
+                            strength,
+                            magic,
+                            defense,
+                            resistance,
+                            agility,
+                            luck,
+                        ]
+                    )
+                    or strength + magic + defense + resistance + agility + luck > 20
+                ):
                     # Get error payload if any fields are empty or the stat total is over 20
                     error_blocks = helper.get_error_payload_blocks("createcharacter")
                     slack_client.chat_postEphemeral(
@@ -214,7 +246,7 @@ def interactive_endpoint():
                         defense=defense,
                         resistance=resistance,
                         agility=agility,
-                        luck=luck
+                        luck=luck,
                     )
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
@@ -240,7 +272,9 @@ def interactive_endpoint():
                 # Looks through all character stats
                 for _, val in state_values.items():
                     if "allocate_points_class" in val:
-                        character_class = val["allocate_points_class"]["selected_option"]["value"]
+                        character_class = val["allocate_points_class"][
+                            "selected_option"
+                        ]["value"]
                     if "allocate_points_strength" in val:
                         strength = int(val["allocate_points_strength"]["value"])
                     if "allocate_points_magic" in val:
@@ -255,8 +289,22 @@ def interactive_endpoint():
                         luck = int(val["allocate_points_luck"]["value"])
 
                 # Checks if all fields are populated and if the total does not exceed the stat total boundary
-                if (all(stat is None for stat in [character_class, strength, magic, defense, resistance, agility, luck])
-                        or strength + magic + defense + resistance + agility + luck > stat_total_boundary):
+                if (
+                    all(
+                        stat is None
+                        for stat in [
+                            character_class,
+                            strength,
+                            magic,
+                            defense,
+                            resistance,
+                            agility,
+                            luck,
+                        ]
+                    )
+                    or strength + magic + defense + resistance + agility + luck
+                    > stat_total_boundary
+                ):
                     # Get error payload if any fields are empty or exceeds the stat boundary
                     error_blocks = helper.get_error_payload_blocks("allocatepoints")
                     slack_client.chat_postEphemeral(
@@ -270,7 +318,7 @@ def interactive_endpoint():
                         defense=defense,
                         resistance=resistance,
                         agility=agility,
-                        luck=luck
+                        luck=luck,
                     )
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
@@ -294,7 +342,8 @@ def interactive_endpoint():
                 else:
                     blocks = ct.create_pet(pet_name=pet_name, slack_user_id=user_id)
                     slack_client.chat_postEphemeral(
-                        channel=channel_id, user=user_id, blocks=blocks)
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
             elif actions[0]["action_id"] == "buy_action_button":
                 # Buy Item - button was clicked
                 channel_id = payload["container"]["channel_id"]
@@ -306,15 +355,21 @@ def interactive_endpoint():
                 print(state_values.items())
                 for _, val in state_values.items():
                     if "product_id_to_buy" in val:
-                        product_id = val["product_id_to_buy"]["selected_option"]["value"]
+                        product_id = val["product_id_to_buy"]["selected_option"][
+                            "value"
+                        ]
                 if product_id is None:
                     error_blocks = helper.get_error_payload_blocks("showstore")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = store.buy_item(product_id=product_id, slack_user_id=user_id)
-                    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+                    blocks = store.buy_item(
+                        product_id=product_id, slack_user_id=user_id
+                    )
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
             elif actions[0]["action_id"] == "feed_pet_action_button":
                 # Feed Pet - button was clicked
                 channel_id = payload["container"]["channel_id"]
@@ -325,17 +380,121 @@ def interactive_endpoint():
                 inventory_id = None
                 for _, val in state_values.items():
                     if "feed_pet_inventory_select" in val:
-                        inventory_id = val["feed_pet_inventory_select"]["selected_option"]["value"]
+                        inventory_id = val["feed_pet_inventory_select"][
+                            "selected_option"
+                        ]["value"]
                 if inventory_id is None:
                     error_blocks = helper.get_error_payload_blocks("feed-pet")
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=error_blocks
                     )
                 else:
-                    blocks = ct.feed_pet(inventory_id=inventory_id, slack_user_id=user_id)
+                    blocks = ct.feed_pet(
+                        inventory_id=inventory_id, slack_user_id=user_id
+                    )
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks
                     )
+            elif actions[0]["action_id"] == "pomodoro_timer_start":
+                # Pomodoro Timer - Start Timer button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                pt = PomodoroTimer(app=app)
+                state_values = payload["state"]["values"]
+
+                # Extract the entered focus duration
+                duration = None
+                for _, val in state_values.items():
+                    if "pomodoro_timer_duration" in val:
+                        duration = val["pomodoro_timer_duration"]["value"]
+
+                if not duration or not duration.isdigit():
+                    # Handle invalid input
+                    error_blocks = [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Invalid input. Please enter a valid duration in minutes.",
+                            },
+                        }
+                    ]
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    # Start the Pomodoro Timer
+                    total_minutes = int(duration)
+                    total_seconds = total_minutes * 60
+                    elapsed_time = 0
+
+                    def send_message_to_user(user_id, text):
+                        """
+                        Sends a message to the user in Slack.
+                        """
+                        # Here you'd implement the actual Slack API call to send a message
+
+                        print_blocks = [
+                            {
+                                "type": "section",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": f"{text}",
+                                },
+                            }
+                        ]
+                        slack_client.chat_postEphemeral(
+                            channel=channel_id, user=user_id, blocks=print_blocks
+                        )
+
+                    def pomodoro_cycle():
+                        nonlocal elapsed_time
+                        while elapsed_time < total_seconds:
+                            # Work period
+                            send_message_to_user(
+                                user_id, "Focus for the next 25 minutes!"
+                            )
+                            work_duration = min(
+                                25 * 60, total_seconds - elapsed_time
+                            )  ###### changed from 25 to 1
+                            time.sleep(work_duration)
+                            elapsed_time += work_duration
+
+                            if elapsed_time >= total_seconds:
+                                break
+
+                            # Break period
+                            send_message_to_user(
+                                user_id, "Your 5-minute break has started!"
+                            )
+                            break_duration = min(
+                                5 * 60, total_seconds - elapsed_time
+                            )  #### 5 to 0.5
+                            time.sleep(break_duration)
+                            elapsed_time += break_duration
+
+                        send_message_to_user(
+                            user_id, "Your Pomodoro session is complete! Great work!"
+                        )
+
+                    # Confirmation message
+                    confirmation_blocks = [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": f"Pomodoro timer started for *{total_minutes} minutes*! Stay focused! 🚀",
+                            },
+                        }
+                    ]
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=confirmation_blocks
+                    )
+
+                    # Running the Pomodoro timer in a separate thread to avoid blocking
+                    timer_thread = threading.Thread(target=pomodoro_cycle)
+                    timer_thread.start()
 
     return make_response("", 200)
 
@@ -356,7 +515,7 @@ def basic():
 
 
 @app.route("/viewpending", methods=["POST"])
-def vpending(): #added
+def vpending():  # added
     """
     Endpoint to view the pending tasks
 
@@ -379,7 +538,7 @@ def vpending(): #added
 
 
 @app.route("/viewcompleted", methods=["POST"])
-def vcompleted(): #added
+def vcompleted():  # added
     """
     Endpoint to view the completed tasks
 
@@ -403,7 +562,7 @@ def vcompleted(): #added
 
 
 @app.route("/filtertasks", methods=["POST"])
-def filtertasks(): #added
+def filtertasks():  # added
     """
     Endpoint to view the completed tasks
 
@@ -419,7 +578,7 @@ def filtertasks(): #added
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
     filters = data.get("text")
-    tags = filters.split(',')
+    tags = filters.split(",")
 
     ft = FilterTasks(tags)
     payload = ft.filter_tasks()
@@ -428,7 +587,7 @@ def filtertasks(): #added
 
 
 @app.route("/taskdone", methods=["POST"])
-def taskdone(): #added
+def taskdone():  # added
     """
     Endpoint to mark a task as completed
 
@@ -445,6 +604,7 @@ def taskdone(): #added
     payload = td.update_points()
     return jsonify(payload)
 
+
 @app.route("/showinventory", methods=["POST"])
 def showinventory():
     """
@@ -458,11 +618,12 @@ def showinventory():
 
     """
     data = request.form
-    
+
     slack_user_id = data.get("user_id")
 
     ShowInventory().add_default_inventory(userID=slack_user_id)
     return ShowInventory().get_inventory(slack_user_id)
+
 
 @app.route("/showstore", methods=["POST"])
 def showstore():
@@ -480,11 +641,14 @@ def showstore():
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
     blocks = ShowStore().create_show_store_blocks()
-    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks, text="Store")    
+    slack_client.chat_postEphemeral(
+        channel=channel_id, user=user_id, blocks=blocks, text="Store"
+    )
     return Response(), 200
 
+
 @app.route("/create", methods=["POST"])
-def create(): #added
+def create():  # added
     """
     Endpoint to create a new task, this endpoint triggers an ephemeral message for the user to enter task details for creation
 
@@ -506,8 +670,20 @@ def create(): #added
     return Response(), 200
 
 
+@app.route("/pomodoro-timer", methods=["POST"])
+def pomodoroTimer():
+    pt = PomodoroTimer(app=app)
+    blocks = pt.timer_input_block()
+
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+
 @app.route("/help", methods=["POST"])
-def help(): #added
+def help():  # added
     """
     A helper endpoint to view all commands and how to use them
 
@@ -525,7 +701,7 @@ def help(): #added
 
 
 @app.route("/leaderboard", methods=["POST"])
-def leaderboard(): #added
+def leaderboard():  # added
     """
     Endpoint to view the leaderboard
 
@@ -541,7 +717,7 @@ def leaderboard(): #added
 
 
 @app.route("/summary", methods=["POST"])
-def summary():#added
+def summary():  # added
     """
     Endpoint to view the pending tasks , completed taks and leaderboard
 
@@ -557,7 +733,7 @@ def summary():#added
 
 
 @app.route("/summary-cron", methods=["POST"])
-def cron_summary():#added
+def cron_summary():  # added
     """
     Endpoint for the cronjob to automatically send summary after every X minutes/hours/seconds
 
@@ -573,7 +749,7 @@ def cron_summary():#added
 
 
 @app.route("/edit", methods=["POST"])
-def edit(): #added
+def edit():  # added
     """
     Endpoint to mark a task as completed
 
@@ -599,7 +775,7 @@ def edit(): #added
 
 
 @app.route("/reminder-cron", methods=["POST"])
-def cron_reminder():#added
+def cron_reminder():  # added
     """
     Endpoint to send reminders for pending tasks with close deadline
 
@@ -618,7 +794,7 @@ def cron_reminder():#added
 
 
 @app.route("/create-character", methods=["POST"])
-def create_character(): #added
+def create_character():  # added
     """
     Endpoint that creates a character given several values representative of character stats. This
     should only be usable if the user does not already have a character
@@ -641,7 +817,7 @@ def create_character(): #added
 
 
 @app.route("/allocate-points", methods=["POST"])
-def allocate_points(): #added
+def allocate_points():  # added
     """
     Endpoint that allows the user to allocate any points that they have accrued from completing tasks
     to their current stats.
@@ -664,6 +840,7 @@ def allocate_points(): #added
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
+
 @app.route("/create-pet", methods=["POST"])
 def create_pet():
     """
@@ -679,6 +856,7 @@ def create_pet():
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
+
 @app.route("/pet-status", methods=["POST"])
 def check_pet_status():
     """
@@ -693,6 +871,7 @@ def check_pet_status():
 
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
+
 
 @app.route("/feed-pet", methods=["POST"])
 def feed_pet():
@@ -711,32 +890,31 @@ def feed_pet():
 
 
 @app.route("/initiate-battle", methods=["POST"])
-def initiate_battle(): #added
+def initiate_battle():  # added
     """
     Endpoint that allows the user to initiate battle with another player
     """
 
 
 @app.route("/take-battle-action", methods=["POST"])
-def take_battle_action(): #added
+def take_battle_action():  # added
     """
     Endpoint that allows the user to take an action in the battle that they are currently in. Sends
     an error message
     """
 
 
-@app.route('/slack/commands', methods=['POST'])
-def handle_commands(): #added
-    command = request.form.get('command')
-    user_id = request.form.get('user_id')
-    text = request.form.get('text')  # Contains command arguments
+@app.route("/slack/commands", methods=["POST"])
+def handle_commands():  # added
+    command = request.form.get("command")
+    user_id = request.form.get("user_id")
+    text = request.form.get("text")  # Contains command arguments
 
-    if command == '/battle':
+    if command == "/battle":
         return handle_battle_command(user_id, text)
-    if command == '/attack':
+    if command == "/attack":
         return handle_attack_command(user_id)
 
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)
-    

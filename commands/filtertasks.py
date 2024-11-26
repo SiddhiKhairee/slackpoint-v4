@@ -13,10 +13,7 @@ class FilterTasks:
         :type tags: list
         """
         self.tags = tags
-        self.payload = {
-            "response_type": "ephemeral",
-            "blocks": []
-        }
+        self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def filter_tasks(self):
         """
@@ -28,8 +25,8 @@ class FilterTasks:
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "No tasks found with the specified tags."
-                }
+                    "text": "No tasks found with the specified tags.",
+                },
             }
             self.payload["blocks"].append(no_results_block)
         else:
@@ -37,7 +34,7 @@ class FilterTasks:
                 # Get all task attributes
                 task_id = getattr(task, "task_id")
                 desc = getattr(task, "description")
-                deadline = getattr(task, "deadline").strftime('%Y-%m-%d')
+                deadline = getattr(task, "deadline").strftime("%Y-%m-%d")
                 points = getattr(task, "points")
                 tags = getattr(task, "tags")
                 task_block = {
@@ -45,8 +42,8 @@ class FilterTasks:
                     "text": {
                         "type": "mrkdwn",
                         "text": f">Task ID: {task_id} ({points} SlackPoints) {desc} [Deadline: {deadline}]\n"
-                                f">Tags: {', '.join(tags) if tags else 'None'}"
-                    }
+                        f">Tags: {', '.join(tags) if tags else 'None'}",
+                    },
                 }
             self.payload["blocks"].append(task_block)
         return self.payload

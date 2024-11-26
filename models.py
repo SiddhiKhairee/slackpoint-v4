@@ -10,22 +10,29 @@ class Product(db.Model):
     """
     This class is a database model for the Product entity.
     """
+
     __tablename__ = "product"
 
-    product_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    product_id = db.Column(
+        db.Integer, primary_key=True, unique=True, autoincrement=True
+    )
     name = db.Column(db.String)
     price = db.Column(db.Float)
     description = db.Column(db.Text)
 
     __table_args__ = (db.UniqueConstraint("product_id"),)
 
+
 class Inventory(db.Model):
     """
     This class is a database model for the Inventory entity.
     """
+
     __tablename__ = "inventory"
 
-    inventory_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    inventory_id = db.Column(
+        db.Integer, primary_key=True, unique=True, autoincrement=True
+    )
     product_id = db.Column(db.Integer, ForeignKey("product.product_id"))
     user_id = db.Column(db.Integer, ForeignKey("user.user_id"))
     quantity = db.Column(db.Integer)
@@ -95,6 +102,7 @@ class User(db.Model):
             db.session.commit()
         return user
 
+
 class Player(db.Model):
     """
     This class is a database model for the Player entity. It stores character stats used in
@@ -131,20 +139,25 @@ class Battle(db.Model):
     battle_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     # First player in the battle
-    player_id_1 = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
+    player_id_1 = db.Column(
+        db.Integer, db.ForeignKey("player.player_id"), nullable=False
+    )
     hp_remaining_1 = db.Column(db.Integer)
     mp_remaining_1 = db.Column(db.Integer)
 
     # Second player in the battle
-    player_id_2 = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
+    player_id_2 = db.Column(
+        db.Integer, db.ForeignKey("player.player_id"), nullable=False
+    )
     hp_remaining_2 = db.Column(db.Integer)
     mp_remaining_2 = db.Column(db.Integer)
 
     # Relationships
-    player1 = db.relationship('Player', foreign_keys=[player_id_1])
-    player2 = db.relationship('Player', foreign_keys=[player_id_2])
+    player1 = db.relationship("Player", foreign_keys=[player_id_1])
+    player2 = db.relationship("Player", foreign_keys=[player_id_2])
 
     __table_args__ = (db.UniqueConstraint("battle_id"),)
+
 
 class Pet(db.Model):
     """
