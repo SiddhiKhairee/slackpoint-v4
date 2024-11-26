@@ -1,6 +1,7 @@
 from commands.taskdone import TaskDone
 from commands.leaderboard import Leaderboard
 from flask import Flask, make_response, request, jsonify, Response
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
@@ -54,8 +55,8 @@ def add_default_products():
         db.session.add(product3)
         db.session.commit()
 
-# Initialize the database and add default products
-@app.before_request
+@app.cli.command("before_start")
+@with_appcontext
 def initialize_db():
     # Create the tables if they don't exist
     db.create_all()
