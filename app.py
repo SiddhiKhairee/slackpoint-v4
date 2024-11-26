@@ -649,11 +649,12 @@ def create_pet():
     Endpoint that creates a pet for the user
     """
     ct = CreatePet()
-    blocks = ct.create_pet_input_blocks()
-
     data = request.form
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
+
+    blocks = ct.create_pet_input_blocks(slack_user_id=user_id)
+
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
