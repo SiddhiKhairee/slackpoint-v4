@@ -10,12 +10,13 @@ class ShowInventory:
     This class show the product in the inventory.
     """
     base_showinventory_block_format = {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "success"
-            }
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "{position}. {ProductName} | {Quantity} | {Description} \n"
+			
         }
+    }
     def __init__(self):
        self.payload = {"response_type": "ephemeral", "blocks": []}
 
@@ -32,11 +33,11 @@ class ShowInventory:
             db.session.add(inventory3)
             db.session.commit()
 
-    def get_inventory(self, userID):
+    def get_inventory(self, slack_user_id):
         """
         Create blocks list containing input fields for name, price and description
         """
-        user = uh.check_user_exists(userID)
+        user = uh.check_user_exists(slack_user_id)
 
         get_inventory = (
             db.session.query(
@@ -52,8 +53,21 @@ class ShowInventory:
             .all()
         )
 
-        blocks = []
-        response_payload = deepcopy(self.base_showinventory_block_format)
-        blocks.append(response_payload)
+        block_title = {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": " *Your Inventory*\n\n*Product* | *Quantity* | *Description*\n"
+            }
+        }
+        self.payload["blocks"].append(block_title)
+        count =0
+        for product in get_inventory:
+            count+=1
+            response_payload = deepcopy(self.base_showinventory_block_format)
+            response_payload["text"]["text"] = response_payload["text"]["text"].format(
+                position = count, ProductName=product.name, Quantity=product.quantity, Description=product.description
+            )
+            self.payload["blocks"].append(response_payload)
 
-        return blocks
+        return self.payload
