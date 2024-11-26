@@ -34,10 +34,7 @@ class EditTask:
 
         """
         self.task_id = task_id
-        self.payload = {
-            "response_type": "ephemeral",
-            "blocks": []
-        }
+        self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def edit_task_input_blocks(self):
         """
@@ -58,7 +55,7 @@ class EditTask:
             "element": {
                 "type": "plain_text_input",
                 "action_id": "edit_action_description",
-                "initial_value": task.description
+                "initial_value": task.description,
             },
             "label": {"type": "plain_text", "text": "Description", "emoji": True},
         }
@@ -67,7 +64,7 @@ class EditTask:
             "element": {
                 "type": "plain_text_input",
                 "action_id": "create_action_tags",
-                "initial_value": " ".join(task.tags)
+                "initial_value": " ".join(task.tags),
             },
             "label": {"type": "plain_text", "text": "Tag", "emoji": True},
         }
@@ -114,9 +111,13 @@ class EditTask:
                 ],
                 "action_id": "edit_action_points",
                 "initial_option": {
-                    "text": {"type": "plain_text", "text": str(task.points), "emoji": False},
+                    "text": {
+                        "type": "plain_text",
+                        "text": str(task.points),
+                        "emoji": False,
+                    },
                     "value": str(task.points),
-                }
+                },
             },
             "label": {"type": "plain_text", "text": "Points", "emoji": True},
         }
@@ -130,18 +131,15 @@ class EditTask:
                     "emoji": True,
                 },
                 "action_id": "edit_action_assignee",
-                "initial_user": assignee_slack_id
+                "initial_user": assignee_slack_id,
             },
             "label": {"type": "plain_text", "text": "Assignee", "emoji": True},
         }
         block_actions_button = {
             "type": "button",
-            "text": {
-                "type": "plain_text",
-                "text": "Edit task"
-            },
+            "text": {"type": "plain_text", "text": "Edit task"},
             "action_id": "edit_action_button",
-            "value": str(task.task_id)
+            "value": str(task.task_id),
         }
         block_actions = {"type": "actions", "elements": []}
         block_actions["elements"].append(block_actions_button)
@@ -160,9 +158,13 @@ class EditTask:
         helper = ErrorHelper()
 
         # check if task id exists
-        exists = db.session.query(db.exists().where(Task.task_id == current_task_id)).scalar()
+        exists = db.session.query(
+            db.exists().where(Task.task_id == current_task_id)
+        ).scalar()
 
-        task_progress = Assignment.query.filter_by(assignment_id=current_task_id, progress=0.0).all()
+        task_progress = Assignment.query.filter_by(
+            assignment_id=current_task_id, progress=0.0
+        ).all()
 
         if exists is False:
             return False, helper.get_command_help("no_task_id")
@@ -199,14 +201,16 @@ class EditTask:
 
         user = uh.check_user_exists(assignee_slack_id)
         db.session.query(Task).filter_by(task_id=self.task_id).update(
-            dict(description=desc, points=points, deadline=deadline, tags = tags)
+            dict(description=desc, points=points, deadline=deadline, tags=tags)
         )
         db.session.query(Assignment).filter_by(assignment_id=self.task_id).update(
             dict(user_id=user.user_id)
         )
         db.session.commit()
         response = deepcopy(self.base_edit_task_block_format)
-        response["text"]["text"] = response["text"]["text"].format(greeting=random.choice(self.greetings), id=self.task_id)
+        response["text"]["text"] = response["text"]["text"].format(
+            greeting=random.choice(self.greetings), id=self.task_id
+        )
         self.payload["blocks"].append(response)
         return self.payload["blocks"]
 
@@ -215,7 +219,9 @@ class EditTask:
         return task
 
     def get_assignment(self):
-        assignment = db.session.query(Assignment).filter_by(assignment_id=self.task_id).first()
+        assignment = (
+            db.session.query(Assignment).filter_by(assignment_id=self.task_id).first()
+        )
         return assignment
 
     def get_user(self, user_id):

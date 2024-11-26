@@ -85,13 +85,17 @@ class ErrorHelper:
         elif command == "task_already_done":
             command_help = "The given Task was already completed!"
         elif command == "cannot_edit_completed_task":
-            command_help = "The given task cannot be edited because it has already been completed!"
+            command_help = (
+                "The given task cannot be edited because it has already been completed!"
+            )
         elif command == "task_done":
             command_help = "Congratulations your task is completed now!"
         elif command == "task_edited":
             command_help = "The given Task ID has been successfully edited!"
         elif command == "player_exists":
-            command_help = "A player already exists for this user, they cannot create another."
+            command_help = (
+                "A player already exists for this user, they cannot create another."
+            )
         elif "player_does_not_exist":
             command_help = "You don't have a player to allocate points to! Use /create-character first to make a player for yourself."
 

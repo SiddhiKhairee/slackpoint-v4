@@ -10,8 +10,7 @@ class PomodoroTimer:
     """
     This class implements a Pomodoro Timer within the Slack bot.
     """
-    
-    
+
     def __init__(self, app):
         """
         Constructor to initialize the payload object for the Pomodoro Timer.
@@ -22,10 +21,7 @@ class PomodoroTimer:
         :return: None
         :rtype: None
         """
-        self.payload = {
-            "response_type": "ephemeral",
-            "blocks": []
-        }
+        self.payload = {"response_type": "ephemeral", "blocks": []}
         self.app = app
 
     def timer_input_block(self):
@@ -39,19 +35,22 @@ class PomodoroTimer:
         :rtype: list
         """
         base_tell_user_their_time_started_block_format = {
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": ">Focus for the next 25 minutes!",
-        },
-    }
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": ">Focus for the next 25 minutes!",
+            },
+        }
 
         block_timer_input = {
             "type": "input",
             "element": {
                 "type": "plain_text_input",
                 "action_id": "pomodoro_timer_duration",
-                "placeholder": {"type": "plain_text", "text": "Enter duration in minutes"},
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Enter duration in minutes",
+                },
             },
             "label": {"type": "plain_text", "text": "Focus Duration", "emoji": True},
         }
@@ -77,7 +76,9 @@ class PomodoroTimer:
         :rtype: None
         """
         slack_client = WebClient(Config.SLACK_BOT_TOKEN)
-        slack_events_adapter = SlackEventAdapter(Config.SLACK_SIGNING_SECRET, "/slack/events", self.app)
+        slack_events_adapter = SlackEventAdapter(
+            Config.SLACK_SIGNING_SECRET, "/slack/events", self.app
+        )
         total_seconds = total_minutes * 60
         elapsed_time = 0
 
@@ -86,26 +87,28 @@ class PomodoroTimer:
             Sends a message to the user in Slack.
             """
             # Here you'd implement the actual Slack API call to send a message
-            
+
             print_blocks = [
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": f"{text}",
-                            },
-                        }
-                    ]
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"{text}",
+                    },
+                }
+            ]
             slack_client.chat_postEphemeral(
-                        channel=channel_id, user=user_id, blocks=print_blocks
-                    )
+                channel=channel_id, user=user_id, blocks=print_blocks
+            )
 
         def pomodoro_cycle():
             nonlocal elapsed_time
             while elapsed_time < total_seconds:
                 # Work period
                 send_message_to_user(user_id, "Focus for the next 25 minutes!")
-                work_duration = min(1 * 60, total_seconds - elapsed_time) ###### changed from 25 to 1
+                work_duration = min(
+                    1 * 60, total_seconds - elapsed_time
+                )  ###### changed from 25 to 1
                 time.sleep(work_duration)
                 elapsed_time += work_duration
 
@@ -114,11 +117,15 @@ class PomodoroTimer:
 
                 # Break period
                 send_message_to_user(user_id, "Your 5-minute break has started!")
-                break_duration = min(0.5 * 60, total_seconds - elapsed_time) #### 5 to 0.5
+                break_duration = min(
+                    0.5 * 60, total_seconds - elapsed_time
+                )  #### 5 to 0.5
                 time.sleep(break_duration)
                 elapsed_time += break_duration
 
-            send_message_to_user(user_id, "Your Pomodoro session is complete! Great work!")
+            send_message_to_user(
+                user_id, "Your Pomodoro session is complete! Great work!"
+            )
 
         # Running the Pomodoro timer in a separate thread to avoid blocking
         timer_thread = threading.Thread(target=pomodoro_cycle)
@@ -142,6 +149,22 @@ class PomodoroTimer:
             try:
                 total_minutes = int(value)
                 self.start_pomodoro_timer(user_id, total_minutes)
-                return [{"type": "section", "text": {"type": "mrkdwn", "text": f"Pomodoro timer started for {total_minutes} minutes!"}}]
+                return [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": f"Pomodoro timer started for {total_minutes} minutes!",
+                        },
+                    }
+                ]
             except ValueError:
-                return [{"type": "section", "text": {"type": "mrkdwn", "text": "Invalid input. Please enter a number for the duration."}}]
+                return [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "Invalid input. Please enter a number for the duration.",
+                        },
+                    }
+                ]

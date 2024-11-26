@@ -30,10 +30,7 @@ class CreateTask:
         :rtype: None
 
         """
-        self.payload = {
-            "response_type": "ephemeral",
-            "blocks": []
-        }
+        self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def create_task_input_blocks(self):
         """
@@ -122,10 +119,7 @@ class CreateTask:
         }
         block_actions_button = {
             "type": "button",
-            "text": {
-                "type": "plain_text", 
-                "text": "Create task"
-            },
+            "text": {"type": "plain_text", "text": "Create task"},
             "action_id": "create_action_button",
         }
         block_actions = {"type": "actions", "elements": []}
@@ -173,7 +167,7 @@ class CreateTask:
         # add the task in assignment, without user assignment
         assignment = Assignment()
         assignment.assignment_id = id
-        if (assignee is not None):
+        if assignee is not None:
             user = User.create_user(assignee)
             assignment.user_id = user.user_id
         assignment.progress = 0
@@ -181,6 +175,8 @@ class CreateTask:
         db.session.commit()
 
         response = deepcopy(self.base_create_task_block_format)
-        response["text"]["text"] = response["text"]["text"].format(greeting=random.choice(self.greetings), id=id)
+        response["text"]["text"] = response["text"]["text"].format(
+            greeting=random.choice(self.greetings), id=id
+        )
         self.payload["blocks"].append(response)
         return self.payload["blocks"]

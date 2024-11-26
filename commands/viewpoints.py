@@ -13,7 +13,7 @@ class ViewPoints:
         "text": {
             "type": "mrkdwn",
             "text": ">Task ID: {id} ({points} SlackPoints) {description} [Deadline: {deadline}]\n"
-                    ">Tags: {tags}"
+            ">Tags: {tags}",
         },
     }
 
@@ -52,7 +52,7 @@ class ViewPoints:
                 Task.points,
                 Task.description,
                 Task.deadline,
-                Task.tags
+                Task.tags,
             )
             .filter(Assignment.progress == self.progress)
             .all()
@@ -66,7 +66,7 @@ class ViewPoints:
                 points=task.points,
                 description=task.description,
                 deadline=task.deadline,
-                tags=', '.join(task.tags) if task.tags else 'None'
+                tags=", ".join(task.tags) if task.tags else "None",
             )
             self.payload["blocks"].append(point)
         if not self.payload["blocks"]:

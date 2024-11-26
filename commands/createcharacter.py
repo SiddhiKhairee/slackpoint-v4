@@ -29,10 +29,7 @@ class CreateCharacter:
         """
 
         self.slack_user_id = slack_user_id
-        self.payload = {
-            "response_type": "ephemeral",
-            "blocks": []
-        }
+        self.payload = {"response_type": "ephemeral", "blocks": []}
 
     def create_character_input_blocks(self):
         """
@@ -51,23 +48,35 @@ class CreateCharacter:
             "type": "input",
             "element": {
                 "type": "static_select",
-                "placeholder": {"type": "plain_text", "text": "Select a class", "emoji": True},
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "Select a class",
+                    "emoji": True,
+                },
                 "options": [
                     {
-                        "text": {"type": "plain_text", "text": "Swordmaster", "emoji": False},
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Swordmaster",
+                            "emoji": False,
+                        },
                         "value": "Swordmaster",
                     },
                     {
-                        "text": {"type": "plain_text", "text": "Fire Mage", "emoji": False},
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Fire Mage",
+                            "emoji": False,
+                        },
                         "value": "Fire Mage",
-                    }
+                    },
                 ],
                 "action_id": "create_character_class",
             },
             "hint": {
                 "type": "plain_text",
                 "text": "Select a character class for yourself! This determines what moves you will be able to use in battle.",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Character Class", "emoji": True},
         }
@@ -79,11 +88,11 @@ class CreateCharacter:
                     "elements": [
                         {
                             "type": "text",
-                            "text": "Set your stats down below. You can only start with a stat total of 20."
+                            "text": "Set your stats down below. You can only start with a stat total of 20.",
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         }
         block_strength = {
             "type": "input",
@@ -98,7 +107,7 @@ class CreateCharacter:
             "hint": {
                 "type": "plain_text",
                 "text": "The amount of strength a character has represents the amount of physical strength it has",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Strength", "emoji": True},
         }
@@ -115,7 +124,7 @@ class CreateCharacter:
             "hint": {
                 "type": "plain_text",
                 "text": "The amount of magic prowess a character has to use magic attacks",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Magic", "emoji": True},
         }
@@ -132,7 +141,7 @@ class CreateCharacter:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to reduce the amount of damage done by physical attacks",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Defense", "emoji": True},
         }
@@ -149,7 +158,7 @@ class CreateCharacter:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to reduce the amount of damage done by magical attacks",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Resistance", "emoji": True},
         }
@@ -166,7 +175,7 @@ class CreateCharacter:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to determine the hit rate and dodge rate of the character. Whoever has more agility will get the first turn in battle.",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Agility", "emoji": True},
         }
@@ -183,16 +192,13 @@ class CreateCharacter:
             "hint": {
                 "type": "plain_text",
                 "text": "A value used to slightly influence the chance to hit and dodge. It also factors into any RNG-based decisions that may occur during battle",
-                "emoji": True
+                "emoji": True,
             },
             "label": {"type": "plain_text", "text": "Luck", "emoji": True},
         }
         block_actions_button = {
             "type": "button",
-            "text": {
-                "type": "plain_text",
-                "text": "Create Player"
-            },
+            "text": {"type": "plain_text", "text": "Create Player"},
             "action_id": "create_character_button",
         }
         block_actions = {"type": "actions", "elements": []}
@@ -223,7 +229,9 @@ class CreateCharacter:
         helper = ErrorHelper()
 
         # Find if player_id exists in User
-        current_user = db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        current_user = (
+            db.session.query(User).filter_by(slack_user_id=current_slack_user_id).one()
+        )
         p_id = getattr(current_user, "player_id")
         player_existent = p_id is not None
 
@@ -232,8 +240,16 @@ class CreateCharacter:
         else:
             return False, helper.get_command_help("player_exists")
 
-    def create_character(self, character_class: str, strength: int, magic: int, defense: int, resistance: int,
-                         agility: int, luck: int) -> list:
+    def create_character(
+        self,
+        character_class: str,
+        strength: int,
+        magic: int,
+        defense: int,
+        resistance: int,
+        agility: int,
+        luck: int,
+    ) -> list:
         """
         Creates a character in the database and returns a payload with the success message along with the newly created player ID
 
@@ -262,7 +278,9 @@ class CreateCharacter:
         player.agility = agility
         player.luck = luck
         # If the player has not allocated all 20 points, put them in reserve
-        player.stat_points_to_allocate = 20 - strength - magic - defense - resistance - agility - luck
+        player.stat_points_to_allocate = (
+            20 - strength - magic - defense - resistance - agility - luck
+        )
         db.session.add(player)
         db.session.commit()
         db.session.refresh(player)
@@ -277,6 +295,8 @@ class CreateCharacter:
         db.session.commit()
 
         response = deepcopy(self.base_create_character_block_format)
-        response["text"]["text"] = response["text"]["text"].format(char_class=character_class)
+        response["text"]["text"] = response["text"]["text"].format(
+            char_class=character_class
+        )
         self.payload["blocks"].append(response)
         return self.payload["blocks"]

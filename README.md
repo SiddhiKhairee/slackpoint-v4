@@ -6,12 +6,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github](https://img.shields.io/badge/language-python-red.svg)](https://docs.python.org/3/)
-[![GitHub contributors](https://img.shields.io/github/contributors/brianhhuynh38/slackpoint-v3)](https://github.com/brianhhuynh38/slackpoint-v3/graphs/contributors/)
+[![GitHub contributors](https://img.shields.io/github/contributors/SiddhiKhairee/slackpoint-v4)](https://github.com/SiddhiKhairee/slackpoint-v4/graphs/contributors/)
 
-[![build](https://github.com/brianhhuynh38/slackpoint-v3/actions/workflows/codecov.yml/badge.svg)](https://github.com/brianhhuynh38/slackpoint-v3/actions)
-[![GitHub top language](https://img.shields.io/github/languages/top/brianhhuynh38/slackpoint-v3)](https://docs.python.org/3/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/brianhhuynh38/slackpoint-v3)](https://github.com/brianhhuynh38/slackpoint-v3/commits/main)
-[![codecov](https://codecov.io/gh/brianhhuynh38/slackpoint-v3/branch/main/graph/badge.svg?token=1H92SAVB5S)](https://codecov.io/gh/brianhhuynh38/slackpoint-v3)
+[![build](https://github.com/SiddhiKhairee/slackpoint-v4/actions/workflows/codecov.yml/badge.svg)](https://github.com/SiddhiKhairee/slackpoint-v4/actions)
+[![GitHub top language](https://img.shields.io/github/languages/top/SiddhiKhairee/slackpoint-v4)](https://docs.python.org/3/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/SiddhiKhairee/slackpoint-v4)](https://github.com/SiddhiKhairee/slackpoint-v4/commits/main)
+[![codecov](https://codecov.io/gh/SiddhiKhairee/slackpoint-v4/branch/main/graph/badge.svg?token=1H92SAVB5S)](https://codecov.io/gh/SiddhiKhairee/slackpoint-v4)
 
 
 Gamify your slack tasks! 💻
@@ -189,9 +189,9 @@ Command: ``/allocate-points``
 
 ## Project documentation
 
-The `docs` folder incorporates all necessary documents and documentation in our project regarding its overall design. The sphinx documentation can be built by referencing our directions on the GitHub wiki regarding the compilation of the documentation: [Documentation Compilation Guide](https://github.com/brianhhuynh38/slackpoint-v3/wiki/Documentation-Compilation-Guide)
+The `docs` folder incorporates all necessary documents and documentation in our project regarding its overall design. The sphinx documentation can be built by referencing our directions on the GitHub wiki regarding the compilation of the documentation: [Documentation Compilation Guide](https://github.com/SiddhiKhairee/slackpoint-v4/wiki/Documentation-Compilation-Guide)
 
-We have also defined much of our theoretical game design and database models in our GitHub Wiki pages as well under the [Game Design](https://github.com/brianhhuynh38/slackpoint-v3/wiki/Game-Design) section.
+We have also defined much of our theoretical game design and database models in our GitHub Wiki pages as well under the [Game Design](https://github.com/SiddhiKhairee/slackpoint-v4/wiki/Game-Design) section.
 
 ### Project Dependencies
 

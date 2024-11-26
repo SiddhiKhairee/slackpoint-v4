@@ -1,5 +1,6 @@
 from models import db, Battle, Player
 
+
 def create_battle(player1_id, player2_id):
     # Retrieve player objects
     player1 = Player.query.get(player1_id)
@@ -12,12 +13,13 @@ def create_battle(player1_id, player2_id):
         mp_remaining_1=player1.max_mp,
         player_id_2=player2_id,
         hp_remaining_2=player2.max_hp,
-        mp_remaining_2=player2.max_mp
+        mp_remaining_2=player2.max_mp,
     )
 
     db.session.add(battle)
     db.session.commit()
     return battle
+
 
 def update_battle(battle_id, hp1, mp1, hp2, mp2):
     battle = Battle.query.get(battle_id)
@@ -27,11 +29,13 @@ def update_battle(battle_id, hp1, mp1, hp2, mp2):
     battle.mp_remaining_2 = mp2
     db.session.commit()
 
+
 def get_battle_by_player(player_id):
     battle = Battle.query.filter(
         (Battle.player_id_1 == player_id) | (Battle.player_id_2 == player_id)
     ).first()
     return battle
+
 
 def end_battle(battle_id):
     battle = Battle.query.get(battle_id)

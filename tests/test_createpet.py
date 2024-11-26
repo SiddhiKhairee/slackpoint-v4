@@ -7,27 +7,49 @@ def test_create_pet_input_blocks():
 
     # test function
     cp = CreatePet()
-    #payload = cp.create_pet_input_blocks(slack_user_id="ABC123")
+    # payload = cp.create_pet_input_blocks(slack_user_id="ABC123")
 
     # expectation
-    expected_payload = [{'type': 'input', 'element': {'type': 'plain_text_input', 'action_id': 'create_action_pet_name'}, 'label': {'type': 'plain_text', 'text': 'Pet Name', 'emoji': True}}, {'type': 'actions', 'elements': [{'type': 'button', 'text': {'type': 'plain_text', 'text': 'Create Pet'}, 'style': 'primary', 'value': 'create_pet', 'action_id': 'create_pet_action_button'}]}]
+    expected_payload = [
+        {
+            "type": "input",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "create_action_pet_name",
+            },
+            "label": {"type": "plain_text", "text": "Pet Name", "emoji": True},
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Create Pet"},
+                    "style": "primary",
+                    "value": "create_pet",
+                    "action_id": "create_pet_action_button",
+                }
+            ],
+        },
+    ]
     print(expected_payload)
-    
-@patch('models.db.session')
-@patch('models.User')
-@patch('models.Pet')
+
+
+@patch("models.db.session")
+@patch("models.User")
+@patch("models.Pet")
 def test_create_pet(mock_pet, mock_user, mock_db_session):
     # Mock the user query
     mock_user_query = mock_db_session.query.return_value.filter_by.return_value
     mock_user_query.first.return_value = None  # Simulate user not found
-    
+
     # Mock creating a new user
     mock_user_instance = mock_user.return_value
     mock_user_instance.user_id = 1  # Mock user_id for the new user
-    
+
     # Mock the Pet model
     mock_pet_instance = mock_pet.return_value
-    
+
     # Mock the CreatePet instance
     cp = CreatePet()
     cp.default_pet_starting_hp = 100  # Set a mock value for starting HP
@@ -43,9 +65,10 @@ def test_create_pet(mock_pet, mock_user, mock_db_session):
     assert payload[-1]["text"]["text"] == "Created pet: TestPet"
     assert len(payload) == 1
 
-@patch('models.db.session')
-@patch('models.User')
-@patch('models.Pet')
+
+@patch("models.db.session")
+@patch("models.User")
+@patch("models.Pet")
 def test_show_pet_status_with_pet(mock_pet, mock_user, mock_db_session):
     # Mock user query
     mock_user_query = mock_db_session.query.return_value.filter_by.return_value
@@ -66,8 +89,8 @@ def test_show_pet_status_with_pet(mock_pet, mock_user, mock_db_session):
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "You don't have a pet yet! Use the `/create-pet` command to create one."
-        }
+            "text": "You don't have a pet yet! Use the `/create-pet` command to create one.",
+        },
     }
 
     # Call the function
@@ -77,9 +100,10 @@ def test_show_pet_status_with_pet(mock_pet, mock_user, mock_db_session):
     assert len(result) == 1
     assert result[0]["text"]["text"] == "*Fluffy*\nHP: 5\n"
 
-@patch('models.db.session')
-@patch('models.User')
-@patch('models.Pet')
+
+@patch("models.db.session")
+@patch("models.User")
+@patch("models.Pet")
 def test_show_pet_status_no_pet(mock_pet, mock_user, mock_db_session):
     # Mock user query
     mock_user_query = mock_db_session.query.return_value.filter_by.return_value
@@ -97,8 +121,8 @@ def test_show_pet_status_no_pet(mock_pet, mock_user, mock_db_session):
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "You don't have a pet yet! Use the `/create-pet` command to create one."
-        }
+            "text": "You don't have a pet yet! Use the `/create-pet` command to create one.",
+        },
     }
 
     # Call the function

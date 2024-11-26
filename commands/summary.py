@@ -6,14 +6,13 @@ from commands.leaderboard import Leaderboard
 
 
 class Summary:
-
     def __init__(self):
         pass
 
     def get_summary(self):
         vp = ViewPoints(progress=0.0)
         payload = vp.get_list()
-        pending_tasks = ''
+        pending_tasks = ""
         for task in payload:
             taskid = task[0]
             points = task[3]
@@ -21,14 +20,15 @@ class Summary:
             taskdate = task[5]
 
             pending_tasks += """ Task ID: {taskid} ({pts} SlackPoints) {taskname} [Deadline: {dt}]./n""".format(
-                taskid=taskid, pts=points, taskname=taskname, dt=taskdate)
+                taskid=taskid, pts=points, taskname=taskname, dt=taskdate
+            )
 
         # leaderboard display
         payload = Leaderboard().view_leaderboard()
 
-        leaderboard_msg = ''
-        for block in payload['blocks']:
-            leaderboard_msg += str(block['text']['text']) + '/n'
+        leaderboard_msg = ""
+        for block in payload["blocks"]:
+            leaderboard_msg += str(block["text"]["text"]) + "/n"
 
         # completed Tasks
         vp = ViewPoints(progress=1.0)
@@ -36,75 +36,56 @@ class Summary:
 
         completed_tasks = ""
 
-        messages = ['Summary is : ', ]
+        messages = [
+            "Summary is : ",
+        ]
 
         parent_msg = {"blocks": []}
         child_msg = {
             "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "*Summary is :*"
-            }
+            "text": {"type": "mrkdwn", "text": "*Summary is :*"},
         }
-        parent_msg['blocks'].append(child_msg)
+        parent_msg["blocks"].append(child_msg)
         child_msg = {
             "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "Pending Tasks are:"
-            }
+            "text": {"type": "mrkdwn", "text": "Pending Tasks are:"},
         }
-        parent_msg['blocks'].append(child_msg)
+        parent_msg["blocks"].append(child_msg)
 
         vp = ViewPoints(progress=0.0)
         payload = vp.get_list()
-        for task in payload['blocks']:
+        for task in payload["blocks"]:
             child_msg = {
                 "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": task['text']['text']
-                }
+                "text": {"type": "mrkdwn", "text": task["text"]["text"]},
             }
-            parent_msg['blocks'].append(child_msg)
+            parent_msg["blocks"].append(child_msg)
         # completed tasks
         child_msg = {
             "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "Completed Tasks are:"
-            }
+            "text": {"type": "mrkdwn", "text": "Completed Tasks are:"},
         }
-        parent_msg['blocks'].append(child_msg)
+        parent_msg["blocks"].append(child_msg)
         vp = ViewPoints(progress=1.0)
         payload = vp.get_list()
-        for task in payload['blocks']:
+        for task in payload["blocks"]:
             child_msg = {
                 "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": task['text']['text']
-                }
+                "text": {"type": "mrkdwn", "text": task["text"]["text"]},
             }
-            parent_msg['blocks'].append(child_msg)
+            parent_msg["blocks"].append(child_msg)
             # Leaderboard
             child_msg = {
                 "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "Leaderboard Status:"
-                }
+                "text": {"type": "mrkdwn", "text": "Leaderboard Status:"},
             }
-            parent_msg['blocks'].append(child_msg)
+            parent_msg["blocks"].append(child_msg)
             payload = Leaderboard().view_leaderboard()
-            for task in payload['blocks']:
+            for task in payload["blocks"]:
                 child_msg = {
                     "type": "section",
-                    "text": {
-                        "type": "mrkdwn",
-                        "text": task['text']['text']
-                    }
+                    "text": {"type": "mrkdwn", "text": task["text"]["text"]},
                 }
-                parent_msg['blocks'].append(child_msg)
+                parent_msg["blocks"].append(child_msg)
 
             return parent_msg

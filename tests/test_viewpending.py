@@ -48,7 +48,7 @@ def test_view_pending_2tasks(
                 "text": {
                     "type": "mrkdwn",
                     "text": ">Task ID: 1 (10 SlackPoints) This is Task 1 [Deadline: 2022-10-24]\n"
-                            ">Tags: This is a sample tag",
+                    ">Tags: This is a sample tag",
                 },
             },
             {
@@ -56,7 +56,7 @@ def test_view_pending_2tasks(
                 "text": {
                     "type": "mrkdwn",
                     "text": ">Task ID: 2 (2 SlackPoints) This is Task 2 [Deadline: 2022-10-26]\n"
-                            ">Tags: This is testing tag",
+                    ">Tags: This is testing tag",
                 },
             },
         ],

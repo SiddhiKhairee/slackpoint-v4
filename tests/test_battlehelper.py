@@ -5,6 +5,7 @@ from helpers.battlehelper import BattleHelper
 # Test calculate_damage() #
 ###########################
 
+
 def test_calculate_damage():
     """
     Tests whether the damage calculations are completely functional and return expected values
@@ -21,7 +22,9 @@ def test_calculate_damage():
 
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(99, 50, 200, 43)
-        assert damage >= 271 and damage <= 284, "50 luck test reduces RNG variance by 0.05"
+        assert (
+            damage >= 271 and damage <= 284
+        ), "50 luck test reduces RNG variance by 0.05"
 
 
 def test_calculate_damage_high_defense():
@@ -31,14 +34,26 @@ def test_calculate_damage_high_defense():
     """
 
     # Test using different amounts of base powers against a very large defense value that should do 1 damage
-    assert BattleHelper.calculate_damage(5, 0, 0, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
-    assert BattleHelper.calculate_damage(0, 0, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
-    assert BattleHelper.calculate_damage(5, 0, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert (
+        BattleHelper.calculate_damage(5, 0, 0, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert (
+        BattleHelper.calculate_damage(0, 0, 5, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert (
+        BattleHelper.calculate_damage(5, 0, 5, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative."
 
     # Test using different amounts of base powers with maximum Luck
-    assert BattleHelper.calculate_damage(5, 99, 0, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative, even with max Luck."
-    assert BattleHelper.calculate_damage(0, 99, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative, even with max Luck."
-    assert BattleHelper.calculate_damage(5, 99, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative, even with max Luck."
+    assert (
+        BattleHelper.calculate_damage(5, 99, 0, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative, even with max Luck."
+    assert (
+        BattleHelper.calculate_damage(0, 99, 5, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative, even with max Luck."
+    assert (
+        BattleHelper.calculate_damage(5, 99, 5, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative, even with max Luck."
 
 
 def test_calculate_damage_zero_boundary():
@@ -49,11 +64,19 @@ def test_calculate_damage_zero_boundary():
 
     # Test damage calculations in all possible values of luck
     for i in range(0, 99):
-        assert BattleHelper.calculate_damage(0, i, 0, 0) == 1, "Damage calculator did not calculate zero boundary correctly with Luck value of {}".format(i)
+        assert (
+            BattleHelper.calculate_damage(0, i, 0, 0) == 1
+        ), "Damage calculator did not calculate zero boundary correctly with Luck value of {}".format(
+            i
+        )
 
     # Test instances where power would not be zero, should return higher than 1
-    assert BattleHelper.calculate_damage(5, 0, 0, 0) >= 1, "Damage calculator should not be 1 or less if power is more than 1"
-    assert BattleHelper.calculate_damage(0, 0, 5, 0) >= 1, "Damage calculator should not be 1 or less if power is more than 1"
+    assert (
+        BattleHelper.calculate_damage(5, 0, 0, 0) >= 1
+    ), "Damage calculator should not be 1 or less if power is more than 1"
+    assert (
+        BattleHelper.calculate_damage(0, 0, 5, 0) >= 1
+    ), "Damage calculator should not be 1 or less if power is more than 1"
 
 
 def test_calculate_damage_negative():
@@ -63,13 +86,21 @@ def test_calculate_damage_negative():
     """
 
     # Test with negative offensive values
-    assert BattleHelper.calculate_damage(-5, 0, 0, 0) == 1, "Damage calculator should be 1 if damage is negative"
-    assert BattleHelper.calculate_damage(0, 0, -5, 0) == 1, "Damage calculator should be 1 if damage is negative"
-    assert BattleHelper.calculate_damage(-5, 0, -5, 0) == 1, "Damage calculator should be 1 if damage is negative"
+    assert (
+        BattleHelper.calculate_damage(-5, 0, 0, 0) == 1
+    ), "Damage calculator should be 1 if damage is negative"
+    assert (
+        BattleHelper.calculate_damage(0, 0, -5, 0) == 1
+    ), "Damage calculator should be 1 if damage is negative"
+    assert (
+        BattleHelper.calculate_damage(-5, 0, -5, 0) == 1
+    ), "Damage calculator should be 1 if damage is negative"
 
     # Test with negative defensive values and positive attack values
     damage = BattleHelper.calculate_damage(5, 0, 5, -5)
-    assert damage >= 22 and damage <= 25, "Damage should be between 22-25 with 10 atk and -5 def"
+    assert (
+        damage >= 22 and damage <= 25
+    ), "Damage should be between 22-25 with 10 atk and -5 def"
 
     # Test with negative defense and attack values
     damage = BattleHelper.calculate_damage(-5, 0, -5, -5)
@@ -85,15 +116,21 @@ def test_calculate_damage_max_luck():
     # Check to see if BattleHelper calculates values that fall within the range of the random generation 50 times
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(46, 99, 80, 22)
-        assert damage == 115, "Test higher move power than atk; the variance is low enough to make it floor to 115 every time"
+        assert (
+            damage == 115
+        ), "Test higher move power than atk; the variance is low enough to make it floor to 115 every time"
 
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(73, 99, 20, 60)
-        assert damage >= 64 and damage <= 65, "Test higher atk than move power, should be between 64-65"
+        assert (
+            damage >= 64 and damage <= 65
+        ), "Test higher atk than move power, should be between 64-65"
 
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(99, 99, 200, 43)
-        assert damage >= 283 and damage <= 284, "Test very high values, should be between 283-284"
+        assert (
+            damage >= 283 and damage <= 284
+        ), "Test very high values, should be between 283-284"
 
 
 def test_calculate_damage_overload_luck():
@@ -106,15 +143,22 @@ def test_calculate_damage_overload_luck():
     # Check to see if BattleHelper calculates values that fall within the range of the random generation 50 times despite overloaded luck
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(46, 200, 80, 22)
-        assert damage == 115, "Test higher move power than atk; the variance is low enough to make it floor to 115 every time"
+        assert (
+            damage == 115
+        ), "Test higher move power than atk; the variance is low enough to make it floor to 115 every time"
 
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(73, 500, 20, 60)
-        assert damage >= 64 and damage <= 65, "Test higher atk than move power, should be between 64-65"
+        assert (
+            damage >= 64 and damage <= 65
+        ), "Test higher atk than move power, should be between 64-65"
 
     for i in range(0, 50):
         damage = BattleHelper.calculate_damage(99, 9999999, 200, 43)
-        assert damage >= 283 and damage <= 284, "Test very high values, should be between 283-284"
+        assert (
+            damage >= 283 and damage <= 284
+        ), "Test very high values, should be between 283-284"
+
 
 #################################
 # Test calculate_fixed_damage() #
@@ -147,9 +191,15 @@ def test_calculate_fixed_damage_high_defense():
     """
 
     # Test using different amounts of base powers against a very large defense value that should do 1 damage
-    assert BattleHelper.calculate_fixed_damage(5, 0, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
-    assert BattleHelper.calculate_fixed_damage(0, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
-    assert BattleHelper.calculate_fixed_damage(5, 5, 200) == 1, "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert (
+        BattleHelper.calculate_fixed_damage(5, 0, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert (
+        BattleHelper.calculate_fixed_damage(0, 5, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative."
+    assert (
+        BattleHelper.calculate_fixed_damage(5, 5, 200) == 1
+    ), "Damage calculator should return as 1 if the value calculated becomes negative."
 
 
 def test_calculate_fixed_damage_zero_boundary():
@@ -158,11 +208,17 @@ def test_calculate_fixed_damage_zero_boundary():
     This should return as 1 damage.
     """
 
-    assert BattleHelper.calculate_fixed_damage(0, 0, 0) == 1, "Damage calculator did not calculate zero boundary correctly if it divides by 0"
+    assert (
+        BattleHelper.calculate_fixed_damage(0, 0, 0) == 1
+    ), "Damage calculator did not calculate zero boundary correctly if it divides by 0"
 
     # Test instances where power would not be zero, should return higher than 1
-    assert BattleHelper.calculate_fixed_damage(5, 0, 0) >= 1, "Damage calculator should not be 1 or less if power is more than 1"
-    assert BattleHelper.calculate_fixed_damage(0, 5, 0) >= 1, "Damage calculator should not be 1 or less if power is more than 1"
+    assert (
+        BattleHelper.calculate_fixed_damage(5, 0, 0) >= 1
+    ), "Damage calculator should not be 1 or less if power is more than 1"
+    assert (
+        BattleHelper.calculate_fixed_damage(0, 5, 0) >= 1
+    ), "Damage calculator should not be 1 or less if power is more than 1"
 
 
 def test_calculate_fixed_damage_negative():
@@ -172,13 +228,21 @@ def test_calculate_fixed_damage_negative():
     """
 
     # Test with negative offensive values
-    assert BattleHelper.calculate_fixed_damage(-5, 0, 0) == 1, "Damage calculator should be 1 if damage is negative"
-    assert BattleHelper.calculate_fixed_damage(0, -5, 0) == 1, "Damage calculator should be 1 if damage is negative"
-    assert BattleHelper.calculate_fixed_damage(-5, -5, 0) == 1, "Damage calculator should be 1 if damage is negative"
+    assert (
+        BattleHelper.calculate_fixed_damage(-5, 0, 0) == 1
+    ), "Damage calculator should be 1 if damage is negative"
+    assert (
+        BattleHelper.calculate_fixed_damage(0, -5, 0) == 1
+    ), "Damage calculator should be 1 if damage is negative"
+    assert (
+        BattleHelper.calculate_fixed_damage(-5, -5, 0) == 1
+    ), "Damage calculator should be 1 if damage is negative"
 
     # Test with negative defensive values and positive attack values
     damage = BattleHelper.calculate_fixed_damage(5, 5, -5)
-    assert damage == 22, "Damage should be 23 with 10 atk and -5 def, no variance observed"
+    assert (
+        damage == 22
+    ), "Damage should be 23 with 10 atk and -5 def, no variance observed"
 
     # Test with negative defense and attack values
     damage = BattleHelper.calculate_fixed_damage(-5, -5, -5)
@@ -196,11 +260,21 @@ def test_calculate_hit_rate():
     """
 
     # Calculate hit rates with varying positive base stat values from 0-99 (normal functionality)
-    assert BattleHelper.calculate_hit_rate(15, 50, 70, 20, 90) == 64, "Values tested should match values that are in the model, always rounded up"
-    assert BattleHelper.calculate_hit_rate(27, 45, 80, 56, 25) == 71, "Values tested should match values that are in the model, always rounded up"
-    assert BattleHelper.calculate_hit_rate(47, 86, 40, 37, 65) == 44, "Values tested should match values that are in the model, always rounded up"
-    assert BattleHelper.calculate_hit_rate(69, 23, 90, 47, 75) == 93, "Values tested should match values that are in the model, always rounded up"
-    assert BattleHelper.calculate_hit_rate(1, 90, 20, 78, 1) == 16, "Values tested should match values that are in the model, always rounded up"
+    assert (
+        BattleHelper.calculate_hit_rate(15, 50, 70, 20, 90) == 64
+    ), "Values tested should match values that are in the model, always rounded up"
+    assert (
+        BattleHelper.calculate_hit_rate(27, 45, 80, 56, 25) == 71
+    ), "Values tested should match values that are in the model, always rounded up"
+    assert (
+        BattleHelper.calculate_hit_rate(47, 86, 40, 37, 65) == 44
+    ), "Values tested should match values that are in the model, always rounded up"
+    assert (
+        BattleHelper.calculate_hit_rate(69, 23, 90, 47, 75) == 93
+    ), "Values tested should match values that are in the model, always rounded up"
+    assert (
+        BattleHelper.calculate_hit_rate(1, 90, 20, 78, 1) == 16
+    ), "Values tested should match values that are in the model, always rounded up"
 
 
 def test_calculate_hit_rate_same_stats():
@@ -210,11 +284,21 @@ def test_calculate_hit_rate_same_stats():
     """
 
     # Calculate hit rates with same stats
-    assert BattleHelper.calculate_hit_rate(0, 0, 0, 0, 0) == 0, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(0, 0, 80, 0, 0) == 80, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(20, 0, 80, 20, 0) == 80, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(0, 30, 80, 0, 30) == 80, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(40, 40, 80, 40, 40) == 80, "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 0, 0, 0) == 0
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 80, 0, 0) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(20, 0, 80, 20, 0) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 30, 80, 0, 30) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(40, 40, 80, 40, 40) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
 
 
 def test_calculate_hit_rate_same_stat_total():
@@ -225,10 +309,18 @@ def test_calculate_hit_rate_same_stat_total():
     """
 
     # Calculate hit rates with same accuracy stat totals
-    assert BattleHelper.calculate_hit_rate(59, 30, 80, 50, 60) == 80, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(50, 60, 80, 59, 30) == 80, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(69, 20, 80, 48, 90) == 80, "Should multiply hit rate by 1 if stat totals match"
-    assert BattleHelper.calculate_hit_rate(48, 90, 80, 69, 20) == 80, "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(59, 30, 80, 50, 60) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(50, 60, 80, 59, 30) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(69, 20, 80, 48, 90) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
+    assert (
+        BattleHelper.calculate_hit_rate(48, 90, 80, 69, 20) == 80
+    ), "Should multiply hit rate by 1 if stat totals match"
 
 
 def test_calculate_hit_rate_smallest():
@@ -237,11 +329,21 @@ def test_calculate_hit_rate_smallest():
     """
 
     # Calculate the smallest possible hit rates for a multitude of base hit rates
-    assert BattleHelper.calculate_hit_rate(0, 0, 100, 99, 99) == 50, "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
-    assert BattleHelper.calculate_hit_rate(0, 0, 80, 99, 99) == 40, "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
-    assert BattleHelper.calculate_hit_rate(0, 0, 60, 99, 99) == 30, "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
-    assert BattleHelper.calculate_hit_rate(0, 0, 40, 99, 99) == 20, "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
-    assert BattleHelper.calculate_hit_rate(0, 0, 20, 99, 99) == 10, "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 100, 99, 99) == 50
+    ), "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 80, 99, 99) == 40
+    ), "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 60, 99, 99) == 30
+    ), "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 40, 99, 99) == 20
+    ), "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 20, 99, 99) == 10
+    ), "Get the max difference between base stats should halve base hit rate if target has max stats and user doesn't"
 
 
 def test_calculate_hit_rate_largest():
@@ -250,11 +352,21 @@ def test_calculate_hit_rate_largest():
     """
 
     # Calculates the largest possible hit rates for a multitude of base hit rates
-    assert BattleHelper.calculate_hit_rate(99, 99, 100, 0, 0) == 200, "Getting the max difference between base stats should double base hit rate"
-    assert BattleHelper.calculate_hit_rate(99, 99, 80, 0, 0) == 160, "Getting the max difference between base stats should double base hit rate"
-    assert BattleHelper.calculate_hit_rate(99, 99, 60, 0, 0) == 120, "Getting the max difference between base stats should double base hit rate"
-    assert BattleHelper.calculate_hit_rate(99, 99, 40, 0, 0) == 80, "Getting the max difference between base stats should double base hit rate"
-    assert BattleHelper.calculate_hit_rate(99, 99, 20, 0, 0) == 40, "Getting the max difference between base stats should double base hit rate"
+    assert (
+        BattleHelper.calculate_hit_rate(99, 99, 100, 0, 0) == 200
+    ), "Getting the max difference between base stats should double base hit rate"
+    assert (
+        BattleHelper.calculate_hit_rate(99, 99, 80, 0, 0) == 160
+    ), "Getting the max difference between base stats should double base hit rate"
+    assert (
+        BattleHelper.calculate_hit_rate(99, 99, 60, 0, 0) == 120
+    ), "Getting the max difference between base stats should double base hit rate"
+    assert (
+        BattleHelper.calculate_hit_rate(99, 99, 40, 0, 0) == 80
+    ), "Getting the max difference between base stats should double base hit rate"
+    assert (
+        BattleHelper.calculate_hit_rate(99, 99, 20, 0, 0) == 40
+    ), "Getting the max difference between base stats should double base hit rate"
 
 
 def test_calculate_hit_rate_zero_boundary():
@@ -264,8 +376,12 @@ def test_calculate_hit_rate_zero_boundary():
     """
 
     # Take care of denominator equaling 0; number should be very high if using normal values
-    assert BattleHelper.calculate_hit_rate(-99, -99, 80, -99, -99) == 0, "-99 target AGL and LUK sets denominator to 1, and not error"
-    assert BattleHelper.calculate_hit_rate(50, 50, 80, -99, -99) == 15496, "-99 target AGL and LUK sets denominator to 1, and not error"
+    assert (
+        BattleHelper.calculate_hit_rate(-99, -99, 80, -99, -99) == 0
+    ), "-99 target AGL and LUK sets denominator to 1, and not error"
+    assert (
+        BattleHelper.calculate_hit_rate(50, 50, 80, -99, -99) == 15496
+    ), "-99 target AGL and LUK sets denominator to 1, and not error"
 
 
 def test_calculate_hit_rate_negative():
@@ -276,9 +392,17 @@ def test_calculate_hit_rate_negative():
     """
 
     # Calculate with absolute minimum negative stats (-99 in AGL and LUK), should always equal 0 no matter what the opponent has
-    assert BattleHelper.calculate_hit_rate(-99, -99, 80, 0, 0) == 0, "-99 user AGL and LUK should always return 0"
-    assert BattleHelper.calculate_hit_rate(-99, -99, 80, 99, 99) == 0, "-99 user AGL and LUK should always return 0"
-    assert BattleHelper.calculate_hit_rate(-99, -99, 80, 0, 0) == BattleHelper.calculate_hit_rate(-99, -99, 80, 99, 99), "-99 user AGL and LUK should always return 0"
+    assert (
+        BattleHelper.calculate_hit_rate(-99, -99, 80, 0, 0) == 0
+    ), "-99 user AGL and LUK should always return 0"
+    assert (
+        BattleHelper.calculate_hit_rate(-99, -99, 80, 99, 99) == 0
+    ), "-99 user AGL and LUK should always return 0"
+    assert BattleHelper.calculate_hit_rate(
+        -99, -99, 80, 0, 0
+    ) == BattleHelper.calculate_hit_rate(
+        -99, -99, 80, 99, 99
+    ), "-99 user AGL and LUK should always return 0"
 
 
 def test_calculate_hit_rate_negative_hard_boundary():
@@ -289,10 +413,22 @@ def test_calculate_hit_rate_negative_hard_boundary():
     """
 
     # Calculate with over minimum negative stats (-99 in AGL and LUK), these should cap out at -99 as that is where it becomes undefined
-    assert BattleHelper.calculate_hit_rate(-99, -99, 80, -999, -999) == 0, "-99 target AGL and LUK sets denominator to 1, and not error"
-    assert BattleHelper.calculate_hit_rate(-99, -99, 80, -99, -99) == BattleHelper.calculate_hit_rate(-99, -99, 80, -999, -999), "-99 target AGL and LUK sets denominator to 1, and not error"
-    assert BattleHelper.calculate_hit_rate(50, 50, 80, -999, -999) == 15496, "-99 target AGL and LUK sets denominator to 1, and not error"
-    assert BattleHelper.calculate_hit_rate(50, 50, 80, -999, -999) == BattleHelper.calculate_hit_rate(50, 50, 80, -99, -99), "-99 target AGL and LUK sets denominator to 1, and not error"
+    assert (
+        BattleHelper.calculate_hit_rate(-99, -99, 80, -999, -999) == 0
+    ), "-99 target AGL and LUK sets denominator to 1, and not error"
+    assert BattleHelper.calculate_hit_rate(
+        -99, -99, 80, -99, -99
+    ) == BattleHelper.calculate_hit_rate(
+        -99, -99, 80, -999, -999
+    ), "-99 target AGL and LUK sets denominator to 1, and not error"
+    assert (
+        BattleHelper.calculate_hit_rate(50, 50, 80, -999, -999) == 15496
+    ), "-99 target AGL and LUK sets denominator to 1, and not error"
+    assert BattleHelper.calculate_hit_rate(
+        50, 50, 80, -999, -999
+    ) == BattleHelper.calculate_hit_rate(
+        50, 50, 80, -99, -99
+    ), "-99 target AGL and LUK sets denominator to 1, and not error"
 
 
 def test_calculate_hit_rate_guaranteed():
@@ -302,7 +438,15 @@ def test_calculate_hit_rate_guaranteed():
     input.
     """
 
-    assert BattleHelper.calculate_hit_rate(0, 0, 101, 0, 0) == 100, "Always return 100 if base hit rate is over 100"
-    assert BattleHelper.calculate_hit_rate(0, 0, 101, 99, 99) == 100, "Always return 100 if base hit rate is over 100, this usually returns ~50"
-    assert BattleHelper.calculate_hit_rate(99, 99, 101, 0, 0) == 100, "Always return 100 if base hit rate is over 100, this would return 202"
-    assert BattleHelper.calculate_hit_rate(-9, -9, 101, 0, 0) == 100, "Always return 100 if base hit rate is over 100"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 101, 0, 0) == 100
+    ), "Always return 100 if base hit rate is over 100"
+    assert (
+        BattleHelper.calculate_hit_rate(0, 0, 101, 99, 99) == 100
+    ), "Always return 100 if base hit rate is over 100, this usually returns ~50"
+    assert (
+        BattleHelper.calculate_hit_rate(99, 99, 101, 0, 0) == 100
+    ), "Always return 100 if base hit rate is over 100, this would return 202"
+    assert (
+        BattleHelper.calculate_hit_rate(-9, -9, 101, 0, 0) == 100
+    ), "Always return 100 if base hit rate is over 100"

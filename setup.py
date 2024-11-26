@@ -16,9 +16,9 @@ def read(filename):
 setup(
     name="slackpoint v3",
     version="3.0.0",
-    url="https://github.com/brianhhuynh38/slackpoint-v3",
-    author="Brian Huynh, Manav Kamdar, Shanmukh Chatadi",
-    author_email="bhhuynh@ncsu.edu",
+    url="https://github.com/SiddhiKhairee/slackpoint-v4",
+    author="Min-Ting Tu, Sidharth Shambu, Siddhi Khairee",
+    author_email="katydu@ncsu.edu",
     description="Sets up the project automatically.",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

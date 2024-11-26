@@ -38,7 +38,7 @@ but feel free to use something else if you would like to):
 **Clone the project from GitHub:**
 
 ```bash
-  git clone https://github.com/brianhhuynh38/slackpoint-v3
+  git clone https://github.com/SiddhiKhairee/slackpoint-v4
 ```
 
 **Go to the project directory:**
