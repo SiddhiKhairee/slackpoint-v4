@@ -25,11 +25,15 @@ from commands.createcharacter import CreateCharacter
 from commands.allocatepoints import AllocatePoints
 from commands.filtertasks import FilterTasks
 from commands.createpet import CreatePet
+from commands.pomodorotimer import PomodoroTimer
+
 
 from models import Product
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
+import time
+import threading
 
 
 
@@ -290,6 +294,100 @@ def interactive_endpoint():
                     blocks = ct.create_pet(pet_name=pet_name, slack_user_id=user_id)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks)
+            
+            elif actions[0]["action_id"] == "pomodoro_timer_start":
+                # Pomodoro Timer - Start Timer button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                pt = PomodoroTimer(app=app)
+                state_values = payload["state"]["values"]
+
+                # Extract the entered focus duration
+                duration = None
+                for _, val in state_values.items():
+                    if "pomodoro_timer_duration" in val:
+                        duration = val["pomodoro_timer_duration"]["value"]
+
+                if not duration or not duration.isdigit():
+                    # Handle invalid input
+                    error_blocks = [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Invalid input. Please enter a valid duration in minutes.",
+                            },
+                        }
+                    ]
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    # Start the Pomodoro Timer
+                    total_minutes = int(duration)
+                    total_seconds = total_minutes * 60
+                    elapsed_time = 0
+
+                    def send_message_to_user(user_id, text):
+                        """
+                        Sends a message to the user in Slack.
+                        """
+                        # Here you'd implement the actual Slack API call to send a message
+                        
+                        print_blocks = [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": f"{text}",
+                                        },
+                                    }
+                                ]
+                        slack_client.chat_postEphemeral(
+                                    channel=channel_id, user=user_id, blocks=print_blocks
+                                )
+
+                    def pomodoro_cycle():
+                        nonlocal elapsed_time
+                        while elapsed_time < total_seconds:
+                            # Work period
+                            send_message_to_user(user_id, "Focus for the next 25 minutes!")
+                            work_duration = min(25 * 60, total_seconds - elapsed_time) ###### changed from 25 to 1
+                            time.sleep(work_duration)
+                            elapsed_time += work_duration
+
+                            if elapsed_time >= total_seconds:
+                                break
+
+                            # Break period
+                            send_message_to_user(user_id, "Your 5-minute break has started!")
+                            break_duration = min(5 * 60, total_seconds - elapsed_time) #### 5 to 0.5
+                            time.sleep(break_duration)
+                            elapsed_time += break_duration
+
+                        send_message_to_user(user_id, "Your Pomodoro session is complete! Great work!")
+                    #pt.start_pomodoro_timer(user_id=user_id, channel_id = channel_id, total_minutes=total_minutes)
+
+                    # Confirmation message
+                    confirmation_blocks = [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": f"Pomodoro timer started for *{total_minutes} minutes*! Stay focused! 🚀",
+                            },
+                        }
+                    ]
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=confirmation_blocks
+                    )
+
+                    # Running the Pomodoro timer in a separate thread to avoid blocking
+                    timer_thread = threading.Thread(target=pomodoro_cycle)
+                    timer_thread.start()
+
+
 
     return make_response("", 200)
 
@@ -441,6 +539,18 @@ def create(): #added
     user_id = data.get("user_id")
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
+
+@app.route("/pomodoro-timer", methods=["POST"])
+def pomodoroTimer(): 
+    pt = PomodoroTimer(app=app)
+    blocks = pt.timer_input_block()
+
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
 
 
 @app.route("/help", methods=["POST"])
