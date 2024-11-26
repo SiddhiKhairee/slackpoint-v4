@@ -17,7 +17,7 @@ class Reminders:
         tom_tasks=[]
         for taskinfo in listofdict:
             task_text = taskinfo["text"]["text"]
-            str_date = re.findall("\d{4}-\d{2}-\d{2}",task_text)[0]
+            str_date = re.findall(r"\d{4}-\d{2}-\d{2}",task_text)[0] 
             curr_date = datetime.date.today()
             task_date=datetime.datetime.strptime(str_date,"%Y-%m-%d").date()
             tomorrow = curr_date + datetime.timedelta(days=1)

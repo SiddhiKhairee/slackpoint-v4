@@ -265,7 +265,7 @@ def basic():
 
 
 @app.route("/viewpending", methods=["POST"])
-def vpending():
+def vpending(): #added
     """
     Endpoint to view the pending tasks
 
@@ -288,7 +288,7 @@ def vpending():
 
 
 @app.route("/viewcompleted", methods=["POST"])
-def vcompleted():
+def vcompleted(): #added
     """
     Endpoint to view the completed tasks
 
@@ -312,7 +312,7 @@ def vcompleted():
 
 
 @app.route("/filtertasks", methods=["POST"])
-def filtertasks():
+def filtertasks(): #added
     """
     Endpoint to view the completed tasks
 
@@ -337,7 +337,7 @@ def filtertasks():
 
 
 @app.route("/taskdone", methods=["POST"])
-def taskdone():
+def taskdone(): #added
     """
     Endpoint to mark a task as completed
 
@@ -356,7 +356,7 @@ def taskdone():
 
 
 @app.route("/create", methods=["POST"])
-def create():
+def create(): #added
     """
     Endpoint to create a new task, this endpoint triggers an ephemeral message for the user to enter task details for creation
 
@@ -379,7 +379,7 @@ def create():
 
 
 @app.route("/help", methods=["POST"])
-def help():
+def help(): #added
     """
     A helper endpoint to view all commands and how to use them
 
@@ -397,7 +397,7 @@ def help():
 
 
 @app.route("/leaderboard", methods=["POST"])
-def leaderboard():
+def leaderboard(): #added
     """
     Endpoint to view the leaderboard
 
@@ -413,7 +413,7 @@ def leaderboard():
 
 
 @app.route("/summary", methods=["POST"])
-def summary():
+def summary():#added
     """
     Endpoint to view the pending tasks , completed taks and leaderboard
 
@@ -429,7 +429,7 @@ def summary():
 
 
 @app.route("/summary-cron", methods=["POST"])
-def cron_summary():
+def cron_summary():#added
     """
     Endpoint for the cronjob to automatically send summary after every X minutes/hours/seconds
 
@@ -445,7 +445,7 @@ def cron_summary():
 
 
 @app.route("/edit", methods=["POST"])
-def edit():
+def edit(): #added
     """
     Endpoint to mark a task as completed
 
@@ -471,7 +471,7 @@ def edit():
 
 
 @app.route("/reminder-cron", methods=["POST"])
-def cron_reminder():
+def cron_reminder():#added
     """
     Endpoint to send reminders for pending tasks with close deadline
 
@@ -490,7 +490,7 @@ def cron_reminder():
 
 
 @app.route("/create-character", methods=["POST"])
-def create_character():
+def create_character(): #added
     """
     Endpoint that creates a character given several values representative of character stats. This
     should only be usable if the user does not already have a character
@@ -513,7 +513,7 @@ def create_character():
 
 
 @app.route("/allocate-points", methods=["POST"])
-def allocate_points():
+def allocate_points(): #added
     """
     Endpoint that allows the user to allocate any points that they have accrued from completing tasks
     to their current stats.
@@ -538,14 +538,14 @@ def allocate_points():
 
 
 @app.route("/initiate-battle", methods=["POST"])
-def initiate_battle():
+def initiate_battle(): #added
     """
     Endpoint that allows the user to initiate battle with another player
     """
 
 
 @app.route("/take-battle-action", methods=["POST"])
-def take_battle_action():
+def take_battle_action(): #added
     """
     Endpoint that allows the user to take an action in the battle that they are currently in. Sends
     an error message
@@ -553,7 +553,7 @@ def take_battle_action():
 
 
 @app.route('/slack/commands', methods=['POST'])
-def handle_commands():
+def handle_commands(): #added
     command = request.form.get('command')
     user_id = request.form.get('user_id')
     text = request.form.get('text')  # Contains command arguments
