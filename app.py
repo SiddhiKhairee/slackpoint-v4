@@ -6,8 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
 from flask import Flask
-
+from models import Inventory
 from commands.help import Help
+import helpers.user_helper as uh
 from commands.reminders import Reminders
 from models import db
 from slack import WebClient
@@ -68,6 +69,10 @@ def initialize_db():
     # Ensure the app context is available when adding products
     with app.app_context():
         add_default_products()
+        # add default inventory
+        #add_default_inventory()
+
+    
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -294,7 +299,47 @@ def interactive_endpoint():
                     blocks = ct.create_pet(pet_name=pet_name, slack_user_id=user_id)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks)
-            
+            elif actions[0]["action_id"] == "buy_action_button":
+                # Buy Item - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                store = ShowStore()
+                state_values = payload["state"]["values"]
+                product_id = None
+                print(state_values.items())
+                for _, val in state_values.items():
+                    if "product_id_to_buy" in val:
+                        product_id = val["product_id_to_buy"]["selected_option"]["value"]
+                if product_id is None:
+                    error_blocks = helper.get_error_payload_blocks("showstore")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = store.buy_item(product_id=product_id, slack_user_id=user_id)
+                    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+            elif actions[0]["action_id"] == "feed_pet_action_button":
+                # Feed Pet - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                ct = CreatePet()
+                state_values = payload["state"]["values"]
+                inventory_id = None
+                for _, val in state_values.items():
+                    if "feed_pet_inventory_select" in val:
+                        inventory_id = val["feed_pet_inventory_select"]["selected_option"]["value"]
+                if inventory_id is None:
+                    error_blocks = helper.get_error_payload_blocks("feed-pet")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = ct.feed_pet(inventory_id=inventory_id, slack_user_id=user_id)
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=blocks
+                    )
             elif actions[0]["action_id"] == "pomodoro_timer_start":
                 # Pomodoro Timer - Start Timer button was clicked
                 channel_id = payload["container"]["channel_id"]
@@ -367,7 +412,6 @@ def interactive_endpoint():
                             elapsed_time += break_duration
 
                         send_message_to_user(user_id, "Your Pomodoro session is complete! Great work!")
-                    #pt.start_pomodoro_timer(user_id=user_id, channel_id = channel_id, total_minutes=total_minutes)
 
                     # Confirmation message
                     confirmation_blocks = [
@@ -386,8 +430,6 @@ def interactive_endpoint():
                     # Running the Pomodoro timer in a separate thread to avoid blocking
                     timer_thread = threading.Thread(target=pomodoro_cycle)
                     timer_thread.start()
-
-
 
     return make_response("", 200)
 
@@ -497,7 +539,24 @@ def taskdone(): #added
     payload = td.update_points()
     return jsonify(payload)
 
+@app.route("/showinventory", methods=["POST"])
+def showinventory():
+    """
+    Endpoint to view the inventory
 
+    :param:
+    :type:
+    :raise:
+    :return: Response object with payload object containing details of items in the inventory
+    :rtype: Response
+
+    """
+    data = request.form
+    
+    slack_user_id = data.get("user_id")
+
+    ShowInventory().add_default_inventory(userID=slack_user_id)
+    return ShowInventory().get_inventory(slack_user_id)
 
 @app.route("/showstore", methods=["POST"])
 def showstore():
@@ -717,11 +776,12 @@ def create_pet():
     Endpoint that creates a pet for the user
     """
     ct = CreatePet()
-    blocks = ct.create_pet_input_blocks()
-
     data = request.form
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
+
+    blocks = ct.create_pet_input_blocks(slack_user_id=user_id)
+
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
 
@@ -736,6 +796,21 @@ def check_pet_status():
     user_id = data.get("user_id")
 
     blocks = ct.show_pet_status(slack_user_id=user_id)
+
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
+    return Response(), 200
+
+@app.route("/feed-pet", methods=["POST"])
+def feed_pet():
+    """
+    Endpoint that allows the user to feed their pet
+    """
+    ct = CreatePet()
+    data = request.form
+    channel_id = data.get("channel_id")
+    user_id = data.get("user_id")
+
+    blocks = ct.feed_pet_input_blocks(slack_user_id=user_id)
 
     slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
     return Response(), 200
@@ -770,3 +845,4 @@ def handle_commands(): #added
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8000, debug=True)
+    

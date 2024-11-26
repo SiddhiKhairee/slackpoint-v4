@@ -42,7 +42,7 @@ class Help:
         ]
         self.commands_dictionary["taskdone"] = [
             "*Complete Task*",
-            ">To mark a task as Completed, just try the command */task-done* <Task ID>, and now you are one step closer at being one of the top five contenders!",
+            ">To mark a task as Completed, just try the command */task-done* <Task ID>, and you can earn the points for the task.",
         ]
         self.commands_dictionary["help"] = [
             "*Help*",
@@ -55,6 +55,26 @@ class Help:
         self.commands_dictionary["summary"] = [
             "*Summary*",
             ">To view the summary, just try the command */summary*, and there you go! SlackPoint would show you a list of pending tasks, completed tasks and the current leaderboard.",
+        ]
+        self.commands_dictionary["showstore"] = [
+            "*Show the product in store and you can also buy it*",
+            ">To view the products in the store, just try the command */show-store*, and there you go! SlackPoint would show you a list of products available in the store. In addition, you can buy the product by using the points you have earned.",
+        ]
+        self.commands_dictionary["createpet"] = [
+            "*Create Pet*",
+            ">To create a pet, just try the command */create-pet* and you would receive a message from Slack to fill out the details of the pet.\n>Enter the name of the pet. \n Each user can have only one pet.",        
+        ]
+        self.commands_dictionary["feedpet"] = [
+            "*Feed Pet*",
+            ">To feed your pet, just try the command */feed-pet* and you would need to select the food item from the list. \n Each food item will increase the pet's hunger level by a different amount.",
+        ]
+        self.commands_dictionary["showInventory"] = [
+            "*Show Inventory*",
+            ">To view the inventory, just try the command */show-inventory*, and there you go! SlackPoint would show you a list of items you have in the inventory.",
+        ]
+        self.commands_dictionary["pomodorotimer"] = [
+            "*Pomodoro Timer*",
+            ">To start a Pomodoro Timer, just try the command */pomodoro-timer* and you would receive a message from Slack to select the duration of the timer.\n>Once the timer is started, you can see the countdown in the message itself.",
         ]
         self.commands_dictionary["createcharacter"] = [
             "*Character Creation*",
