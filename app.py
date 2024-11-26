@@ -4,13 +4,14 @@ from flask import Flask, make_response, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import json
+from flask import Flask
 
 from commands.help import Help
 from commands.reminders import Reminders
 from models import db
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
-
+from commands.showinventory import ShowInventory
 from commands.battle_commands import handle_attack_command
 from commands.battle_commands import handle_battle_command
 from commands.viewpoints import ViewPoints
@@ -22,10 +23,11 @@ from commands.showstore import ShowStore
 from commands.createcharacter import CreateCharacter
 from commands.allocatepoints import AllocatePoints
 from commands.filtertasks import FilterTasks
-
+from models import Product
 from helpers.errorhelper import ErrorHelper
 from json import dumps
 from helpers import helper
+
 
 
 app = Flask(__name__)
@@ -38,7 +40,27 @@ slack_client = WebClient(Config.SLACK_BOT_TOKEN)
 slack_events_adapter = SlackEventAdapter(
     Config.SLACK_SIGNING_SECRET, "/slack/events", app
 )
+def add_default_products():
+    # Check if the product table is empty
+    if db.session.query(Product).count() == 0:
+        # Add default products
+        product1 = Product(name="Large food", price=3, description="Restores 3 HP")
+        product2 = Product(name="Medium food", price=2, description="Restores 2 HP")
+        product3 = Product(name="Small food", price=1, description="Restores 1 HP")
+        db.session.add(product1)
+        db.session.add(product2)
+        db.session.add(product3)
+        db.session.commit()
 
+# Initialize the database and add default products
+@app.before_request
+def initialize_db():
+    # Create the tables if they don't exist
+    db.create_all()
+
+    # Ensure the app context is available when adding products
+    with app.app_context():
+        add_default_products()
 
 @app.route("/slack/interactive-endpoint", methods=["POST"])
 def interactive_endpoint():
@@ -354,6 +376,8 @@ def taskdone():
     payload = td.update_points()
     return jsonify(payload)
 
+
+
 @app.route("/showstore", methods=["POST"])
 def showstore():
     """
@@ -369,9 +393,8 @@ def showstore():
     data = request.form
     channel_id = data.get("channel_id")
     user_id = data.get("user_id")
-    ss = ShowStore()
-    blocks = ss.show_store()
-    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks, text="Store")
+    blocks = ShowStore().create_show_store_blocks()
+    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks, text="Store")    
     return Response(), 200
 
 @app.route("/create", methods=["POST"])

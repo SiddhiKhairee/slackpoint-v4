@@ -19,6 +19,20 @@ class Product(db.Model):
 
     __table_args__ = (db.UniqueConstraint("product_id"),)
 
+class Inventory(db.Model):
+    """
+    This class is a database model for the Inventory entity.
+    """
+    __tablename__ = "inventory"
+
+    inventory_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    product_id = db.Column(db.Integer, ForeignKey("product.product_id"))
+    user_id = db.Column(db.Integer, ForeignKey("user.user_id"))
+    quantity = db.Column(db.Integer)
+
+    __table_args__ = (db.UniqueConstraint("inventory_id"),)
+
+
 class Task(db.Model):
     """
     This class is a database model for the Task entity.
