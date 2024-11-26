@@ -82,9 +82,14 @@ class TaskDone:
             self.p_id = getattr(current_user, "player_id")
             player_existent = self.p_id is not None
 
+            # Get current task
+            curr_task = db.session.query(Task).filter_by(task_id=current_task_id).first()
+
+            # Add task points to points_earned in "user" table
+            db.session.query(User).filter_by(user_id=user_id).update(dict(points_earned=getattr(curr_task, "points") + getattr(current_user, "points_earned")))
+            
             if player_existent:
-                # Get the current task and player
-                curr_task = db.session.query(Task).filter_by(task_id=current_task_id).first()
+                # Get the current player
                 curr_player = db.session.query(Player).filter_by(player_id=getattr(my_query, "player_id")).first()
                 # Update the values for the player
                 db.session.query(Player).filter_by(player_id=getattr(curr_player, "player_id")).update(

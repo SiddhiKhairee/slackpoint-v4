@@ -295,6 +295,26 @@ def interactive_endpoint():
                     blocks = ct.create_pet(pet_name=pet_name, slack_user_id=user_id)
                     slack_client.chat_postEphemeral(
                         channel=channel_id, user=user_id, blocks=blocks)
+            elif actions[0]["action_id"] == "buy_action_button":
+                # Buy Item - button was clicked
+                channel_id = payload["container"]["channel_id"]
+                user_id = payload["user"]["id"]
+                helper = ErrorHelper()
+                store = ShowStore()
+                state_values = payload["state"]["values"]
+                product_id = None
+                print(state_values.items())
+                for _, val in state_values.items():
+                    if "product_id_to_buy" in val:
+                        product_id = val["product_id_to_buy"]["selected_option"]["value"]
+                if product_id is None:
+                    error_blocks = helper.get_error_payload_blocks("showstore")
+                    slack_client.chat_postEphemeral(
+                        channel=channel_id, user=user_id, blocks=error_blocks
+                    )
+                else:
+                    blocks = store.buy_item(product_id=product_id, slack_user_id=user_id)
+                    slack_client.chat_postEphemeral(channel=channel_id, user=user_id, blocks=blocks)
 
     return make_response("", 200)
 

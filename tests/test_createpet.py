@@ -105,4 +105,4 @@ def test_show_pet_status_no_pet(mock_pet, mock_user, mock_db_session):
     }
 
     # Call the function
-    result = cp.show_pet_status(slack_user_id="ABC123")
+    cp.show_pet_status(slack_user_id="ABC123")
