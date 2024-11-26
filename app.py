@@ -437,10 +437,11 @@ def showinventory():
 
     """
     data = request.form
-    user_id = data.get("user_id")
-    print(user_id)
-    ShowInventory().add_default_inventory(userID=user_id)
-    return ShowInventory().get_inventory(user_id)
+    
+    slack_user_id = data.get("user_id")
+
+    ShowInventory().add_default_inventory(userID=slack_user_id)
+    return ShowInventory().get_inventory(slack_user_id)
 
 @app.route("/showstore", methods=["POST"])
 def showstore():
