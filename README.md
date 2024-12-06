@@ -75,7 +75,7 @@ You can create a new task by simple using the ``/create-task`` command. We ask f
 
 Command: ``/create``
 
-![Create Task GIF](https://i.imgur.com/lUtX23a.gif)
+![Create Task GIF](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/create%20task.png)
 
 This particular command will create a new task with the description as ``Hey! This is my new task`` having ``100`` points and a deadline of ``15th October 2022``
 
@@ -135,6 +135,7 @@ This particular command will edit your existing task with the description as ``H
 #### **9. Help:**
 
 Newbie at using SlackPoint? You could use some help...
+This will provide you will all the available commands and how to use them.
 
 Command: ``/help [no parameters]``
 
@@ -144,39 +145,37 @@ Command: ``/help [no parameters]``
 Create a Pomodoro timer to help you concentrate on the task!
 
 Command: ``/pomodoro-timer``
-![Pomodoro timer PIC]()
+![Pomodoro timer PIC](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/timer.jpeg)
 
 ####  **11. Create Pet:**
 Create a new pet for yourself!
 
 Command: ``/create-pet``
-![Create Pet PIC]()
+![Create Pet PIC](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/createpet.jpeg)
 
 ####  **12. Show Store and Buy product:**
 Show the product store and you can buy product used the point you got from finishing the task to feed your pet.
 
 Command: ``/show-store ``
-![show store  PIC]()
+![show store  PIC](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/showstore.png)
 
 ####  **13. Show inventory:**
 Show the products you have already bought.
 
 Command: ``/show-inventory ``
-![show inventory PIC]()
+![show inventory PIC](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/showinventory.png)
 
 ####  **14. Create Pet Status :**
 Check on your pet's HP and other information!
 
 Command: ``/pet-status ``
-![Check Pet Status PIC]()
+![Check Pet Status PIC](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/checkpetstatus.jpeg)
 
 ####  **15. Assign task to teammate :**
 Right now when you create the task you can assign the task to the specific teammate!
 
-![Assign task PIC]()
+![Assign task PIC](https://github.com/SiddhiKhairee/slackpoint-v4/blob/main/pictures/assign.png)
 
-
-This will provide you will all the available commands and how to use them.
 
 ## Project documentation
 
