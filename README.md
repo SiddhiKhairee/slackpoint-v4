@@ -140,6 +140,41 @@ Command: ``/help [no parameters]``
 
 ![Help GIF](https://user-images.githubusercontent.com/21088141/205815812-8144bef2-73df-438c-a84a-6e322a09625a.gif)
 
+####  **10. Pomodoro timer:**
+Create a Pomodoro timer to help you concentrate on the task!
+
+Command: ``/pomodoro-timer``
+![Pomodoro timer PIC]()
+
+####  **11. Create Pet:**
+Create a new pet for yourself!
+
+Command: ``/create-pet``
+![Create Pet PIC]()
+
+####  **12. Show Store and Buy product:**
+Show the product store and you can buy product used the point you got from finishing the task to feed your pet.
+
+Command: ``/show-store ``
+![show store  PIC]()
+
+####  **13. Show inventory:**
+Show the products you have already bought.
+
+Command: ``/show-inventory ``
+![show inventory PIC]()
+
+####  **14. Create Pet Status :**
+Check on your pet's HP and other information!
+
+Command: ``/pet-status ``
+![Check Pet Status PIC]()
+
+####  **15. Assign task to teammate :**
+Right now when you create the task you can assign the task to the specific teammate!
+
+![Assign task PIC]()
+
 
 This will provide you will all the available commands and how to use them.
 
@@ -201,6 +236,12 @@ add more interaction with your pet
 
 
 ### Our team
-- Min Tin Tu, Sidharth Shambu, Siddhi Khaire
-### Reach out to us!
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/katydu"><img src="https://avatars.githubusercontent.com/katydu" width="100px;" alt=""/><br /><b>Min-Ting Tu</b></a><br /></td>
+    <td align="center"><a href="https://github.com/shambu2k"><img src="https://avatars.githubusercontent.com/shambu2k" width="100px;" alt=""/><br /><b>Sidharth Shambu</b></a><br /></td>
+    <td align="center"><a href="https://github.com/SiddhiKhairee"><img src="https://avatars.githubusercontent.com/SiddhiKhairee" width="100px;" alt=""/><br /><b>Siddhi Khairee</b></a><br /></td>
+  </tr>
+</table>
+
 
